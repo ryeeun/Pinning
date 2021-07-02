@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "861609044147",
+    "project_id": "pinning-7486e",
+    "storage_bucket": "pinning-7486e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:861609044147:android:a2b10ebea80fd2ead7e8c6",
+        "android_client_info": {
+          "package_name": "com.econo21.pinning"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "861609044147-cnrae856a2kplt0fqrlmgd7s7ctj5m38.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.econo21.pinning",
+            "certificate_hash": "d354182c1dc20f51d181418eea5dee515438c70e"
+          }
+        },
+        {
+          "client_id": "861609044147-l9r8il8lpb8u178pb3j6td6gd1pv2grj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDYhl3tVQgzLsjgkKJGhygVvZvleit1-yY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "861609044147-l9r8il8lpb8u178pb3j6td6gd1pv2grj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
