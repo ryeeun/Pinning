@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
 
@@ -21,7 +22,7 @@
             android:layout_gravity="center_horizontal"
             android:text="위치"
             android:textColor="#6C6B6B"
-            android:textSize="25dp"
+            android:textSize="20dp"
             tools:layout_editor_absoluteX="182dp"
             tools:layout_editor_absoluteY="11dp" />
 
@@ -46,5 +47,41 @@
 
     </androidx.appcompat.widget.Toolbar>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="60dp">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <LinearLayout
+            android:layout_marginTop="4dp"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal">
+
+            <EditText
+                android:hint="검색할 장소를 입력하세요"
+                android:id="@+id/map_search"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="7dp"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"/>
+
+            <ImageButton
+                android:id="@+id/btn_search"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@color/white"
+                android:src="@drawable/ic_baseline_search_24"/>
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/map_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+</FrameLayout>

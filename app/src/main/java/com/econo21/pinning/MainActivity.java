@@ -56,7 +56,6 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
     ViewGroup mapViewContainer;
     MapPoint mapPoint;
     ImageButton btn_move;
-    Button btn_add;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

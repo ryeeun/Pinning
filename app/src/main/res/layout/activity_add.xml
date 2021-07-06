@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/location_activity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#E8E7E7"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="0dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text=""
+            android:textColor="#6C6B6B"
+            android:textSize="20dp"
+            tools:layout_editor_absoluteX="182dp"
+            tools:layout_editor_absoluteY="11dp" />
+
+        <TextView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:textSize="23dp"
+            android:layout_marginRight="18dp"
+            android:text="완료"
+            />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="102dp"
+            android:layout_height="38dp"
+            android:layout_gravity="left"
+            android:src="@drawable/ic_baseline_chevron_left_24"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="16dp" />
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text=""
+        android:textSize="20dp" />
+
+    <EditText
+        android:id="@+id/pin_name"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:layout_above="@+id/textView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="60dp"
+        android:hint="핀명"
+        android:textSize="20dp" />
+
+    <EditText
+        android:id="@+id/pin_story"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="60dp"
+        android:background="@android:drawable/editbox_background_normal"
+        android:hint="핀 내용"
+        android:lines="6"
+        android:textSize="20dp" />
+
+</RelativeLayout>
