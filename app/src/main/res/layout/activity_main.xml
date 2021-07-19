@@ -27,37 +27,44 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="48dp"
+        android:layout_marginTop="18dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:background="@drawable/round_corner">
 
         <EditText
             android:id="@+id/et_id"
-            android:layout_width="300dp"
-            android:layout_height="48dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="10dp"
-            android:background="#FAF9F9"
-            android:hint="위치를 입력하세요." />
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="15dp"
+            android:layout_weight="1"
+            android:background="#00FFFFFF"
+            android:hint="핀명을 입력하세요" />
 
         <ImageButton
             android:id="@+id/btn_test"
-            android:layout_width="50dp"
-            android:layout_height="48dp"
-            android:layout_marginTop="10dp"
-            android:background="@color/white"
-            android:src="@drawable/ic_baseline_search_24" />
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="6"
+            android:background="#00FFFFFF"
+            android:src="@drawable/ic_baseline_search_24"
+            app:tint="#000000" />
 
     </LinearLayout>
 
     <ImageButton
         android:id="@+id/btn_move"
-        android:layout_width="65dp"
-        android:layout_height="65dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:layout_marginEnd="9dp"
         android:layout_marginRight="9dp"
         android:layout_marginBottom="117dp"
-        android:src="@drawable/ic_baseline_my_location_24" />
+        android:background="@drawable/round_corner"
+        android:src="@drawable/ic_baseline_my_location_24"
+        app:tint="#000000" />
 
 </RelativeLayout>

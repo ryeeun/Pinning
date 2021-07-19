@@ -19,24 +19,22 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Pinning_Map"
         android:usesCleartextTraffic="true">
-        <activity android:name=".LogoutActivity"></activity>
+        <activity android:name=".MypageActivity"></activity>
+        <activity android:name=".ShowDetailsActivity" />
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".SignupActivity" />
+        <activity android:name=".LogoutActivity" />
         <activity android:name=".AddActivity" />
         <activity android:name=".LocationActivity" />
         <activity android:name=".ImageActivity" />
         <activity android:name=".MainActivity" />
-        <activity android:name=".LoginActivity">
+        <activity android:name=".StartActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="com.yongbeam.y_photopicker.util.photopicker.PhotoPickerActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
-        <activity
-            android:name="com.yongbeam.y_photopicker.util.photopicker.PhotoPagerActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
 
         <meta-data
             android:name="com.kakao.sdk.AppKey"

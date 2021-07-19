@@ -17,6 +17,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 
+import net.daum.mf.map.api.CalloutBalloonAdapter;
 import net.daum.mf.map.api.MapPOIItem;
 import net.daum.mf.map.api.MapPoint;
 import net.daum.mf.map.api.MapView;
@@ -28,34 +29,55 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.os.Trace;
+import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import androidx.annotation.NonNull;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements MapView.MapViewEventListener, MapView.CurrentLocationEventListener, MapReverseGeoCoder.ReverseGeoCodingResultListener {
 
     private static final String LOG_TAG = "MainActivity";
-    private static final int GPS_ENABLE_REQUEST_CODE = 2001;
     private static final int PERMISSIONS_REQUEST_CODE = 100;
     String[] REQUIRED_PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION};
 
-    BottomNavigationView bottomNavigationView;
-    MapView mapView;
-    ViewGroup mapViewContainer;
-    MapPoint mapPoint;
-    ImageButton btn_move;
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();;
+    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser(); // 로그인한 유저의 정보
+    private String uid = user != null ? user.getUid():null;
+
+    private BottomNavigationView bottomNavigationView;
+    private MapView mapView;
+    private ViewGroup mapViewContainer;
+    private ImageButton btn_move;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,22 +96,13 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
                     case R.id.menu_Home:
                         break;
                     case R.id.menu_Profile:
-                        Intent profile = new Intent(MainActivity.this, LogoutActivity.class);
+                        Intent profile = new Intent(MainActivity.this, MypageActivity.class);
                         startActivity(profile);
                         break;
                 }
                 return false;
             }
         });
-
-        mapView = new MapView(this);
-        mapView.setCurrentLocationEventListener(this);
-        mapView.setMapViewEventListener(this);
-        //mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading); //현재 자기 위치로 이동
-
-        mapPoint = MapPoint.mapPointWithGeoCoord(37.5514579595, 126.951949155);
-        mapViewContainer = (ViewGroup) findViewById(R.id.map_view);
-        mapViewContainer.addView(mapView);
 
         btn_move = findViewById(R.id.btn_move); // 현재 위치로 지도 중점을 옮기는 버튼
         btn_move.setOnClickListener(new View.OnClickListener() {
@@ -104,28 +117,46 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
             }
         });
 
-        /*
-        btn_add = findViewById(R.id.menu_Plus);  // pin 추가 버튼을 누를 시 사진을 선택하는 화면으로 넘어감
-        btn_add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent picture_select = new Intent(MainActivity.this, ImageActivity.class );
-                startActivity(picture_select);
-            }
-        });
+        mapView = new MapView(this);
+        mapView.setCurrentLocationEventListener(this);
+        mapView.setMapViewEventListener(this);
+        //mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading); //현재 자기 위치로 이동
 
-         */
+        mapViewContainer = (ViewGroup) findViewById(R.id.map_view);
+        mapViewContainer.addView(mapView);
 
+        mapView.setCalloutBalloonAdapter(new CustomCalloutBalloonAdapter());
 
-        MapPOIItem customMarker = new MapPOIItem();
-        customMarker.setItemName("Custom Marker");
-        customMarker.setTag(1);
-        customMarker.setMapPoint(mapPoint);
-        customMarker.setMarkerType(MapPOIItem.MarkerType.CustomImage); // 마커타입을 커스텀 마커로 지정.
-        customMarker.setCustomImageResourceId(R.drawable.location_pin2); // 마커 이미지.
-        customMarker.setCustomImageAutoscale(false); // hdpi, xhdpi 등 안드로이드 플랫폼의 스케일을 사용할 경우 지도 라이브러리의 스케일 기능을 꺼줌.
-        customMarker.setCustomImageAnchor(0.5f, 1.0f); // 마커 이미지중 기준이 되는 위치(앵커포인트) 지정 - 마커 이미지 좌측 상단 기준 x(0.0f ~ 1.0f), y(0.0f ~ 1.0f) 값.
-        mapView.addPOIItem(customMarker);
+        ArrayList<Pin> pinArr = new ArrayList<>();
+        db.collection("user").document(uid).collection("pin").get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            for(QueryDocumentSnapshot document : task.getResult()){
+                                Log.d("@@@", "MainActiviy: " + document.getId() + "=>" + document.getData() );
+                                pinArr.add(document.toObject(Pin.class));
+                            }
+                            ArrayList<MapPOIItem> markerArr = new ArrayList<>();
+                            for(Pin pin : pinArr){
+                                Log.d("@@@", "pin - " + pin);
+                                MapPOIItem marker = new MapPOIItem();
+                                marker.setItemName(pin.getPin_name());
+                                marker.setUserObject("카페");
+                                marker.setMapPoint(MapPoint.mapPointWithGeoCoord(Double.parseDouble(pin.getY()), Double.parseDouble(pin.getX())));
+                                marker.setMarkerType(MapPOIItem.MarkerType.CustomImage); // 마커타입을 커스텀 마커로 지정.
+                                marker.setCustomImageResourceId(R.drawable.pin_blue_64); // 마커 이미지.
+                                marker.setCustomImageAutoscale(true);
+                                marker.setCustomImageAnchor(0.5f, 1.0f);
+                                markerArr.add(marker);
+                            }
+                            mapView.addPOIItems(markerArr.toArray(new MapPOIItem[markerArr.size()]));
+                        }else{
+                            Log.d("@@@", "MainActivity: Error getting document");
+                        }
+
+                    }
+                });
 
     }
 
@@ -264,23 +295,7 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
         });
         builder.create().show();
     }
-/*
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        super.onActivityResult(requestCode, resultCode, data);
 
-        switch (requestCode){
-            case GPS_ENABLE_REQUEST_CODE:
-                // GPS 활성되었는지 검사
-                if(checkLocationServicesStatus()){
-                    Log.d("@@@", "onActivityResult : GPS 활성화되어있음");
-                    checkRunTimePermission();
-                    return;
-                }
-                break;
-        }
-    }
-*/
 
     public boolean checkLocationServicesStatus(){
         LocationManager locationManager = (LocationManager) getSystemService((LOCATION_SERVICE));
@@ -325,4 +340,30 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
     @Override
     public void onMapViewMoveFinished(MapView mapView, MapPoint mapPoint) {
     }
+
+    class CustomCalloutBalloonAdapter implements CalloutBalloonAdapter{
+        private final View mCalloutBalloon;
+
+        public CustomCalloutBalloonAdapter(){
+            mCalloutBalloon = getLayoutInflater().inflate(R.layout.ballon_layout, null);
+        }
+
+        @Override
+        public View getCalloutBalloon(MapPOIItem poiItem){
+            TextView click_text;
+            click_text = mCalloutBalloon.findViewById(R.id.textView);
+            ((TextView) mCalloutBalloon.findViewById(R.id.ball_name)).setText(poiItem.getItemName().toString());
+            ((TextView) mCalloutBalloon.findViewById(R.id.ball_address)).setText(poiItem.getUserObject().toString());
+
+            return mCalloutBalloon;
+        }
+
+        @Override
+        public View getPressedCalloutBalloon(MapPOIItem poiItem){
+            return mCalloutBalloon;  // null을 리턴했을 때 심하게 에러가 발생하는데 이유를 찾지 못함
+        }
+
+    }
 }
+
+

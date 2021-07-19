@@ -4,8 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#E8E7E7"
-    android:orientation="vertical">
-
+    >
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/location_activity"
         android:layout_width="match_parent"
@@ -18,69 +17,91 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="로그인"
+            android:text="회원가입"
             android:textColor="#6C6B6B"
             android:textSize="20dp"
-            />
+             />
 
 
         <ImageView
-            android:id="@+id/login_back"
+            android:id="@+id/signup_back"
             android:layout_width="102dp"
             android:layout_height="28dp"
             android:layout_gravity="left"
             android:src="@drawable/ic_baseline_chevron_left_24"
-            />
+             />
 
     </androidx.appcompat.widget.Toolbar>
 
     <ImageButton
-        android:id="@+id/kakao_login_btn"
+        android:id="@+id/kakao_signup_btn"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/finish_login"
+        android:layout_below="@+id/finish_signup"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
+        android:layout_marginBottom="224dp"
         android:background="#00FFFFFF"
         android:src="@drawable/kakao_login_medium_narrow" />
 
     <EditText
-        android:id="@+id/email"
+        android:id="@+id/mName"
         android:layout_width="250dp"
         android:layout_height="40dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="50dp"
-        android:layout_marginTop="236dp"
+        android:layout_marginTop="212dp"
+        android:background="@drawable/round_corner"
+        android:hint="   닉네임"
+        app:backgroundTint="#FFFFFF" />
+
+    <EditText
+        android:id="@+id/mEmail"
+        android:layout_width="250dp"
+        android:layout_height="40dp"
+        android:layout_below="@+id/mName"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="20dp"
         android:background="@drawable/round_corner"
         android:hint="   이메일"
         app:backgroundTint="#FFFFFF" />
 
     <EditText
-        android:id="@+id/password"
+        android:id="@+id/mPassword"
         android:layout_width="250dp"
         android:layout_height="40dp"
-        android:layout_below="@+id/email"
+        android:layout_below="@+id/mEmail"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="50dp"
         android:layout_marginTop="20dp"
         android:hint="   비밀번호"
-        android:inputType="textPassword"
         android:background="@drawable/round_corner"
         app:backgroundTint="#FFFFFF" />
 
-    <Button
-        android:id="@+id/finish_login"
+    <EditText
+        android:id="@+id/mPasswordCheck"
         android:layout_width="250dp"
         android:layout_height="40dp"
-        android:layout_below="@+id/password"
+        android:layout_below="@+id/mPassword"
         android:layout_centerHorizontal="true"
-        android:layout_marginStart="50dp"
         android:layout_marginLeft="50dp"
-        android:layout_marginTop="30dp"
-        android:text="Log in"
+        android:layout_marginTop="20dp"
         android:background="@drawable/round_corner"
-        app:backgroundTint="#424040" />
+        android:hint="   비밀번호 확인"
+        app:backgroundTint="#FFFFFF" />
 
+    <Button
+        android:id="@+id/finish_signup"
+        android:layout_width="250dp"
+        android:layout_height="40dp"
+        android:layout_below="@+id/mPasswordCheck"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/round_corner"
+        android:text="Sign up"
+        app:backgroundTint="#424040" />
 
 </RelativeLayout>

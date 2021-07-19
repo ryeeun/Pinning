@@ -7,12 +7,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -34,12 +36,15 @@ public class LocationActivity extends AppCompatActivity {
 
     private static final String REST_API = "KakaoAK d8ef7c37cb5fbe0a893f1a47a869ac40";
 
-    EditText mSearchEdit;
-    RecyclerView recyclerView;
-    ImageView imageView;
+    private EditText mSearchEdit;
+    private RecyclerView recyclerView;
+    private ImageView location_next, location_back;
+    private ImageButton btn_clear;
 
-    LocationAdapter locationAdapter;
-    ArrayList<Document> documentArrayList = new ArrayList<>();
+    private LocationAdapter locationAdapter;
+    private ArrayList<Document> documentArrayList = new ArrayList<>();
+
+    private ArrayList<Uri> photo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,22 +53,50 @@ public class LocationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_location);
         initView();
 
-        imageView = findViewById(R.id.imageView);
-        imageView.setOnClickListener(new View.OnClickListener() {
+        Intent intent = getIntent();
+        if(intent.getSerializableExtra("photo") != null){
+            Log.d("@@@","LocationActivity- intent.getSerializableExtra: " + intent.getSerializableExtra("photo"));
+            photo = (ArrayList<Uri>)intent.getSerializableExtra("photo");
+        }
+
+        location_back=findViewById(R.id.location_back);
+        location_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                finish();
+            }
+        });
+
+        location_next = findViewById(R.id.location_next);
+        location_next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 빈칸일 경우에는 안넘어가도록 조건문 필요
+
                 Intent intent = new Intent(LocationActivity.this, AddActivity.class);
                 intent.putExtra("address", locationAdapter.getAddress());
                 intent.putExtra("x", locationAdapter.getX());
                 intent.putExtra("y", locationAdapter.getY());
+                if(photo != null){
+                    Log.d("@@@", "LocationActivity: photo != null");
+                    intent.putExtra("photo", photo);
+                }
                 startActivity(intent);
+            }
+        });
+
+        btn_clear = findViewById(R.id.btn_clear);
+        btn_clear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mSearchEdit.setText(null);
             }
         });
 
     }
 
     private void initView() {
-        mSearchEdit = findViewById(R.id.map_search);
+        mSearchEdit = findViewById(R.id.location_search);
         recyclerView = findViewById(R.id.map_recyclerview);
 
         locationAdapter = new LocationAdapter(documentArrayList, getApplicationContext(), mSearchEdit, recyclerView);

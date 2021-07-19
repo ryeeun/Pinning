@@ -14,8 +14,8 @@ public class Document implements Parcelable {
     private String phone;
     private String category_group_code;
     private String category_group_name;
-    private String x;
-    private String y;
+    private String x;  // longitude
+    private String y;  // latitude
 
     public String getPlaceName() {
         return place_name;

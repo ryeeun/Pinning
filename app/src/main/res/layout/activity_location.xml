@@ -11,7 +11,7 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/location_activity"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:background="#E8E7E7"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="0dp">
@@ -27,52 +27,59 @@
             tools:layout_editor_absoluteY="11dp" />
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/location_next"
             android:layout_width="102dp"
-            android:layout_height="38dp"
+            android:layout_height="28dp"
             android:layout_gravity="right"
             android:layout_marginRight="10dp"
             android:src="@drawable/ic_baseline_chevron_right_24"
             tools:layout_editor_absoluteX="309dp"
-            tools:layout_editor_absoluteY="4dp" />
+            tools:layout_editor_absoluteY="4dp"
+            app:tint="#6C6B6B"/>
 
         <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/location_back"
             android:layout_width="102dp"
-            android:layout_height="38dp"
+            android:layout_height="28dp"
             android:layout_gravity="left"
             android:src="@drawable/ic_baseline_chevron_left_24"
             tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="16dp" />
+            tools:layout_editor_absoluteY="16dp"
+            app:tint="#6C6B6B"/>
 
     </androidx.appcompat.widget.Toolbar>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="60dp">
+        android:layout_marginTop="60dp"
+        android:orientation="vertical">
 
         <LinearLayout
-            android:layout_marginTop="4dp"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="30dp"
+            android:background="#FFFFFF"
             android:orientation="horizontal">
 
             <EditText
-                android:hint="검색할 장소를 입력하세요"
-                android:id="@+id/map_search"
-                android:layout_marginLeft="30dp"
-                android:layout_marginTop="7dp"
+                android:id="@+id/location_search"
                 android:layout_width="300dp"
-                android:layout_height="wrap_content"/>
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/border_bottom"
+                android:hint="검색할 장소를 입력하세요" />
 
             <ImageButton
-                android:id="@+id/btn_search"
+                android:id="@+id/btn_clear"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:background="@color/white"
-                android:src="@drawable/ic_baseline_search_24"/>
+                android:layout_weight="6"
+                android:background="#00FFFFFF"
+                android:src="@drawable/ic_baseline_clear_24"
+                app:tint="#6C6B6B" />
 
         </LinearLayout>
 

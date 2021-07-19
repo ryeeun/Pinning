@@ -5,6 +5,8 @@ import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
+import androidx.multidex.MultiDex;
+import androidx.multidex.MultiDexApplication;
 
 import com.kakao.auth.ApprovalType;
 import com.kakao.auth.AuthType;
@@ -14,7 +16,7 @@ import com.kakao.auth.KakaoAdapter;
 import com.kakao.auth.KakaoSDK;
 
 
-public class GlobalApplication extends Application {
+public class GlobalApplication extends MultiDexApplication {
 
     private static volatile GlobalApplication instance = null;
 

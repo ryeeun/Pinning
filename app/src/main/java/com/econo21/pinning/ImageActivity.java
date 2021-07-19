@@ -4,50 +4,74 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.PermissionChecker;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
+import android.Manifest.permission;
+import android.content.ClipData;
+import android.content.Context;
 import android.content.Intent;
+
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.firebase.firestore.FirebaseFirestore;
 
-import com.yongbeam.y_photopicker.util.photopicker.PhotoPagerActivity;
-import com.yongbeam.y_photopicker.util.photopicker.PhotoPickerActivity;
-import com.yongbeam.y_photopicker.util.photopicker.utils.YPhotoPickerIntent;
-
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+
 public class ImageActivity extends AppCompatActivity {
 
-    private static final int REQUEST_CODE = 0;
-    ImageView imageView;
-    Button btn_cancel;
-    Button btn_gallery;
+    private RecyclerView recyclerView;
+    private ArrayList<Uri> imageList;  // URI
 
-    public static ArrayList<String> selectedPhotos = new ArrayList<>();
+    private ImageView image_next;
+    private ImageView image_back;
+    private ImageButton btn_gallery;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image);
 
-        imageView = findViewById(R.id.imageView);
-        imageView.setOnClickListener(new View.OnClickListener() {
+        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+
+        image_next = findViewById(R.id.image_next);
+        image_next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ImageActivity.this , LocationActivity.class);
-                startActivity(intent); // 액티비티 이동 : 사진->위치 화면으로
-
+                Intent intent = new Intent(ImageActivity.this, LocationActivity.class);
+                if(imageList != null){
+                    Log.d("@@@", "ImageActivity: imageList != null");
+                    Log.d("@@@", "ImageActivity- imageList: " + imageList);
+                    intent.putExtra("photo", imageList);
+                }
+                startActivity(intent);
             }
         });
 
-        btn_cancel = findViewById(R.id.btn_cancel);
-        btn_cancel.setOnClickListener(new View.OnClickListener() {
+        image_back = findViewById(R.id.image_back);
+        image_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
@@ -58,12 +82,9 @@ public class ImageActivity extends AppCompatActivity {
         btn_gallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                YPhotoPickerIntent intent = new YPhotoPickerIntent(ImageActivity.this);
-                intent.setMaxSelectCount(10);
-                intent.setShowCamera(true);
-                intent.setShowGif(true);
-                intent.setSelectCheckBox(true);
-                intent.setMaxGrideItemCount(3);
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                 startActivityResult.launch(intent);
             }
 
@@ -72,24 +93,32 @@ public class ImageActivity extends AppCompatActivity {
                     new ActivityResultCallback<ActivityResult>() {
                         @Override
                         public void onActivityResult(ActivityResult result) {
+                           if(result.getResultCode() == RESULT_OK && result != null){
+                               if(result.getData().getClipData() != null){
+                                   ClipData clipData = result.getData().getClipData();
+                                   if(clipData.getItemCount() >= 10){
+                                       Toast.makeText(ImageActivity.this, "사진은 10개까지 선택가능 합니다.", Toast.LENGTH_SHORT).show();
+                                       return;
+                                   }else if(clipData.getItemCount() == 1){
+                                       Uri filePath = clipData.getItemAt(0).getUri();
+                                       imageList = new ArrayList<>();
+                                       imageList.add(filePath);
+                                   }else if(clipData.getItemCount() > 1 && clipData.getItemCount() < 10){
+                                       imageList = new ArrayList<>();
+                                       for(int i =0 ; i<clipData.getItemCount(); i++){
+                                           imageList.add(clipData.getItemAt(i).getUri());
+                                       }
+                                   }
+                               }
 
-                            List<String> photos = null;
-                            if(result.getResultCode() == RESULT_OK){
-                                if(result.getData() != null) {
-                                    photos = result.getData().getStringArrayListExtra(PhotoPickerActivity.KEY_SELECTED_PHOTOS);
-                                }
-                                if(photos != null){
-                                    selectedPhotos.addAll(photos);
-                                }
-
-                                Intent startActivity = new Intent(ImageActivity.this, PhotoPagerActivity.class);
-                                startActivity.putStringArrayListExtra("photos", selectedPhotos);
-                                startActivity(startActivity);
-                            }
+                               UriImageAdapter adapter = new UriImageAdapter(imageList, ImageActivity.this);
+                               recyclerView.setAdapter(adapter);
+                           }
                         }
                     });
         });
 
     }
-}
 
+
+}
