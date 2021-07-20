@@ -7,8 +7,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Telephony;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -26,7 +30,10 @@ import com.econo21.pinning.location.LocationAdapter;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -45,6 +52,9 @@ public class LocationActivity extends AppCompatActivity {
     private ArrayList<Document> documentArrayList = new ArrayList<>();
 
     private ArrayList<Uri> photo;
+    private GpsTracker gpsTracker;
+    private double latitude;
+    private double longitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +69,7 @@ public class LocationActivity extends AppCompatActivity {
             photo = (ArrayList<Uri>)intent.getSerializableExtra("photo");
         }
 
+
         location_back=findViewById(R.id.location_back);
         location_back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,11 +83,16 @@ public class LocationActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // 빈칸일 경우에는 안넘어가도록 조건문 필요
-
                 Intent intent = new Intent(LocationActivity.this, AddActivity.class);
-                intent.putExtra("address", locationAdapter.getAddress());
-                intent.putExtra("x", locationAdapter.getX());
-                intent.putExtra("y", locationAdapter.getY());
+                if(locationAdapter.getX() == null){
+                    intent.putExtra("address", mSearchEdit.getText().toString());
+                    intent.putExtra("x", String.valueOf(longitude));
+                    intent.putExtra("y" ,String.valueOf(latitude));
+                }else{
+                    intent.putExtra("address", mSearchEdit.getText().toString());
+                    intent.putExtra("x", locationAdapter.getX());
+                    intent.putExtra("y", locationAdapter.getY());
+                }
                 if(photo != null){
                     Log.d("@@@", "LocationActivity: photo != null");
                     intent.putExtra("photo", photo);
@@ -105,6 +121,11 @@ public class LocationActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(locationAdapter);
 
+        gpsTracker = new GpsTracker(LocationActivity.this);
+        latitude = gpsTracker.getLatitude();
+        longitude = gpsTracker.getLongitude();
+
+        mSearchEdit.setText(getCurrentAddress(latitude, longitude));
         mSearchEdit.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
@@ -170,5 +191,28 @@ public class LocationActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "검색리스트에서 장소를 선택해주세요", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    public String getCurrentAddress(double latitude, double longitude){
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        List<Address> addresses;
+        try{
+            addresses = geocoder.getFromLocation(latitude, longitude, 7);
+        }catch (IOException e){
+            //네트워크 문제
+            Toast.makeText(this, "지오코더 서비스 사용불가", Toast.LENGTH_SHORT).show();
+            return "지오코더 서비스 사용불가";
+        }catch (IllegalArgumentException e){
+            Toast.makeText(this, "잘못된 GPS 좌표", Toast.LENGTH_SHORT).show();
+            return "잘못된 GPS 좌표";
+        }
+
+        if(addresses == null || addresses.size() == 0){
+            Toast.makeText(this, "주소 미발견", Toast.LENGTH_SHORT).show();
+            return "주소 미발견";
+        }
+
+        Address address = addresses.get(0);
+        return address.getAddressLine(0).toString()+"\n";
     }
 }

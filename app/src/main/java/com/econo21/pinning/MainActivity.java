@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
         mapView = new MapView(this);
         mapView.setCurrentLocationEventListener(this);
         mapView.setMapViewEventListener(this);
-        //mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading); //현재 자기 위치로 이동
+        mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading); //현재 자기 위치로 이동
 
         mapViewContainer = (ViewGroup) findViewById(R.id.map_view);
         mapViewContainer.addView(mapView);

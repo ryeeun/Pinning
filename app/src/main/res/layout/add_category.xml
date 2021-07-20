@@ -33,10 +33,11 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="180dp"
         android:layout_marginLeft="40dp"
         android:layout_marginTop="20dp"
         android:layout_marginRight="40dp"
+        android:layout_marginBottom="20dp"
         android:background="@android:drawable/editbox_dropdown_light_frame">
 
         <LinearLayout
@@ -67,12 +68,12 @@
                     android:src="@drawable/pin_gray_64" />
 
                 <ImageButton
-                    android:id="@+id/pin_blue"
+                    android:id="@+id/pin_492f10"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="#00FFFFFF"
-                    android:src="@drawable/pin_blue_64" />
+                    android:src="@drawable/pin_492f10" />
 
             </LinearLayout>
 
@@ -83,30 +84,64 @@
                 android:orientation="horizontal">
 
                 <ImageButton
-                    android:id="@+id/pin_pink"
+                    android:id="@+id/pin_DF5E5E"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="#00FFFFFF"
-                    android:src="@drawable/pin_pink_64" />
+                    android:src="@drawable/pin_df5e5e" />
 
                 <ImageButton
-                    android:id="@+id/pin_orange"
+                    android:id="@+id/pin_E98580"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="#00FFFFFF"
-                    android:src="@drawable/pin_orange_64" />
+                    android:src="@drawable/pin_e98580" />
 
                 <ImageButton
-                    android:id="@+id/pin_yellow"
+                    android:id="@+id/pin_FDD2BF"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="#000000FF"
-                    android:src="@drawable/pin_yellow_64" />
+                    android:src="@drawable/pin_fdd2bf" />
 
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="15dp"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/pin_333456"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="#00FFFFFF"
+                    android:src="@drawable/pin_333456" />
+
+                <ImageButton
+                    android:id="@+id/pin_595b83"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="#00FFFFFF"
+                    android:src="@drawable/pin_595b83" />
+
+                <ImageButton
+                    android:id="@+id/pin_a7c5eb"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="#000000FF"
+                    android:src="@drawable/pin_a7c5eb" />
+
+            </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

@@ -101,16 +101,23 @@ public class LogoutActivity extends AppCompatActivity {
         final EditText category_name = (EditText) v.findViewById(R.id.category_name);
         final ImageButton btn1 = (ImageButton) v.findViewById(R.id.pin_black);
         final ImageButton btn2 = (ImageButton) v.findViewById(R.id.pin_gray);
-        final ImageButton btn3 = (ImageButton) v.findViewById(R.id.pin_blue);
-        final ImageButton btn4 = (ImageButton) v.findViewById(R.id.pin_pink);
-        final ImageButton btn5 = (ImageButton) v.findViewById(R.id.pin_orange);
-        final ImageButton btn6 = (ImageButton) v.findViewById(R.id.pin_yellow);
+        final ImageButton btn3 = (ImageButton) v.findViewById(R.id.pin_492f10);
+        final ImageButton btn4 = (ImageButton) v.findViewById(R.id.pin_DF5E5E);
+        final ImageButton btn5 = (ImageButton) v.findViewById(R.id.pin_595b83);
+        final ImageButton btn6 = (ImageButton) v.findViewById(R.id.pin_333456);
+        final ImageButton btn7 = (ImageButton) v.findViewById(R.id.pin_a7c5eb);
+        final ImageButton btn8 = (ImageButton) v.findViewById(R.id.pin_E98580);
+        final ImageButton btn9 = (ImageButton) v.findViewById(R.id.pin_FDD2BF);
         btn1.setOnClickListener(onClickListener);
         btn2.setOnClickListener(onClickListener);
         btn3.setOnClickListener(onClickListener);
         btn4.setOnClickListener(onClickListener);
         btn5.setOnClickListener(onClickListener);
         btn6.setOnClickListener(onClickListener);
+        btn7.setOnClickListener(onClickListener);
+        btn8.setOnClickListener(onClickListener);
+        btn9.setOnClickListener(onClickListener);
+
 
 
         AlertDialog builder = new AlertDialog.Builder(this)
@@ -178,17 +185,26 @@ public class LogoutActivity extends AppCompatActivity {
                 case R.id.pin_gray:
                     s = "gray";
                     break;
-                case R.id.pin_blue:
-                    s = "blue";
+                case R.id.pin_492f10:
+                    s = "492f10";
                     break;
-                case R.id.pin_pink:
-                    s = "pink";
+                case R.id.pin_595b83:
+                    s = "595b83";
                     break;
-                case R.id.pin_orange:
-                    s ="orange";
+                case R.id.pin_333456:
+                    s ="333456";
                     break;
-                case R.id.pin_yellow:
-                    s = "yellow";
+                case R.id.pin_a7c5eb:
+                    s = "a7c5eb";
+                    break;
+                case R.id.pin_DF5E5E:
+                    s = "DF5E5E";
+                    break;
+                case R.id.pin_E98580:
+                    s ="E98580";
+                    break;
+                case R.id.pin_FDD2BF:
+                    s = "FDD2BF";
                     break;
             }
         }

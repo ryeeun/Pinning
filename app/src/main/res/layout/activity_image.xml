@@ -11,25 +11,22 @@
         android:id="@+id/app_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#E8E7E7"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="0dp">
+        android:background="#000000">
 
         <ImageView
             android:id="@+id/image_back"
             android:layout_width="102dp"
             android:layout_height="28dp"
             android:layout_gravity="left"
-            android:background="#00FFFFFF"
             android:src="@drawable/ic_baseline_chevron_left_24"
-            app:tint="#6C6B6B" />
+            app:tint="#FFFFFF" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="사진 선택"
-            android:textColor="#6C6B6B"
+            android:textColor="#FFFFFF"
             android:textSize="25dp" />
 
         <ImageView
@@ -37,10 +34,9 @@
             android:layout_width="102dp"
             android:layout_height="28dp"
             android:layout_gravity="right"
+            android:layout_marginRight="15dp"
             android:src="@drawable/ic_baseline_chevron_right_24"
-            tools:layout_editor_absoluteX="309dp"
-            tools:layout_editor_absoluteY="4dp"
-            app:tint="#6C6B6B"/>
+            app:tint="#FFFFFF"/>
 
     </androidx.appcompat.widget.Toolbar>
 
