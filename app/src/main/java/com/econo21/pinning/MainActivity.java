@@ -34,7 +34,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Trace;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
@@ -42,6 +44,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -78,11 +81,57 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
     private MapView mapView;
     private ViewGroup mapViewContainer;
     private ImageButton btn_move;
+    private EditText et_id;
+    private MapPOIItem[] customMark;
+    private ArrayList<MapPOIItem> searchMark = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mapView = new MapView(this);
+        mapView.setCurrentLocationEventListener(this);
+        mapView.setMapViewEventListener(this);
+        mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading); //현재 자기 위치로 이동
+
+        mapViewContainer = (ViewGroup) findViewById(R.id.map_view);
+        mapViewContainer.addView(mapView);
+
+        mapView.setCalloutBalloonAdapter(new CustomCalloutBalloonAdapter());
+
+        ArrayList<Pin> pinArr = new ArrayList<>();
+        db.collection("user").document(uid).collection("pin").get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            for(QueryDocumentSnapshot document : task.getResult()){
+                                Log.d("@@@", "MainActiviy: " + document.getId() + "=>" + document.getData() );
+                                pinArr.add(document.toObject(Pin.class));
+                            }
+                            ArrayList<MapPOIItem> markerArr = new ArrayList<>();
+                            for(Pin pin : pinArr){
+                                Log.d("@@@", "pin - " + pin);
+                                MapPOIItem marker = new MapPOIItem();
+                                marker.setItemName(pin.getPin_name());
+                                marker.setUserObject(pin.getCategory());
+                                marker.setMapPoint(MapPoint.mapPointWithGeoCoord(Double.parseDouble(pin.getY()), Double.parseDouble(pin.getX())));
+                                marker.setMarkerType(MapPOIItem.MarkerType.CustomImage); // 마커타입을 커스텀 마커로 지정.
+                                chooseImage(pin, marker); //마커 이미지 설정
+                                marker.setCustomImageAutoscale(true);
+                                marker.setCustomImageAnchor(0.5f, 1.0f);
+                                markerArr.add(marker);
+                            }
+                            MapPOIItem[] toArrMarker = markerArr.toArray(new MapPOIItem[markerArr.size()]);
+                            mapView.addPOIItems(toArrMarker);
+                            customMark = toArrMarker;
+                        }else{
+                            Log.d("@@@", "MainActivity: Error getting document");
+                        }
+
+                    }
+                });
 
         bottomNavigationView = findViewById(R.id.bottom_nav_menu);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -117,47 +166,76 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
             }
         });
 
-        mapView = new MapView(this);
-        mapView.setCurrentLocationEventListener(this);
-        mapView.setMapViewEventListener(this);
-        mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading); //현재 자기 위치로 이동
 
-        mapViewContainer = (ViewGroup) findViewById(R.id.map_view);
-        mapViewContainer.addView(mapView);
+        et_id = findViewById(R.id.et_id);
+        et_id.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-        mapView.setCalloutBalloonAdapter(new CustomCalloutBalloonAdapter());
+            }
 
-        ArrayList<Pin> pinArr = new ArrayList<>();
-        db.collection("user").document(uid).collection("pin").get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful()){
-                            for(QueryDocumentSnapshot document : task.getResult()){
-                                Log.d("@@@", "MainActiviy: " + document.getId() + "=>" + document.getData() );
-                                pinArr.add(document.toObject(Pin.class));
-                            }
-                            ArrayList<MapPOIItem> markerArr = new ArrayList<>();
-                            for(Pin pin : pinArr){
-                                Log.d("@@@", "pin - " + pin);
-                                MapPOIItem marker = new MapPOIItem();
-                                marker.setItemName(pin.getPin_name());
-                                marker.setUserObject("카페");
-                                marker.setMapPoint(MapPoint.mapPointWithGeoCoord(Double.parseDouble(pin.getY()), Double.parseDouble(pin.getX())));
-                                marker.setMarkerType(MapPOIItem.MarkerType.CustomImage); // 마커타입을 커스텀 마커로 지정.
-                                marker.setCustomImageResourceId(R.drawable.pin_blue_64); // 마커 이미지.
-                                marker.setCustomImageAutoscale(true);
-                                marker.setCustomImageAnchor(0.5f, 1.0f);
-                                markerArr.add(marker);
-                            }
-                            mapView.addPOIItems(markerArr.toArray(new MapPOIItem[markerArr.size()]));
-                        }else{
-                            Log.d("@@@", "MainActivity: Error getting document");
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                MapPOIItem[] searchPOI;
+                if(s.length() >= 1){
+                    mapView.removeAllPOIItems();
+                    Log.d("@@@","MainActivity- onTextChanged: 입력됨");
+                    searchMark.clear();
+                    for(MapPOIItem mItem : customMark){
+                        if(mItem.getItemName().contains(s)){
+                            searchMark.add(mItem);
                         }
-
                     }
-                });
+                    mapView.addPOIItems(searchMark.toArray(new MapPOIItem[searchMark.size()]));
+                }else if(s.length() == 0){
+                    mapView.removeAllPOIItems();
+                    mapView.addPOIItems(customMark);
+                }
+            }
 
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+
+
+    }
+
+    private void chooseImage(Pin pin, MapPOIItem marker){
+        switch (pin.getCategory()){
+            case "black":
+                marker.setCustomImageResourceId(R.drawable.pin_black_64);
+                break;
+            case "gray":
+                marker.setCustomImageResourceId(R.drawable.pin_gray_64);
+                break;
+            case "492f10":
+                marker.setCustomImageResourceId(R.drawable.pin_492f10);
+                break;
+            case "595b83":
+                marker.setCustomImageResourceId(R.drawable.pin_595b83);
+                break;
+            case "333456":
+                marker.setCustomImageResourceId(R.drawable.pin_333456);
+                break;
+            case "a7c5eb":
+                marker.setCustomImageResourceId(R.drawable.pin_a7c5eb);
+                break;
+            case "DF5E5E":
+                marker.setCustomImageResourceId(R.drawable.pin_df5e5e);
+                break;
+            case "E98580":
+                marker.setCustomImageResourceId(R.drawable.pin_e98580);
+                break;
+            case "FDD2BF":
+                marker.setCustomImageResourceId(R.drawable.pin_fdd2bf);
+                break;
+            default:
+                marker.setCustomImageResourceId(R.drawable.pin_blue_64);
+                break;
+        }
     }
 
 

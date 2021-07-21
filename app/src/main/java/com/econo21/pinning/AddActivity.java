@@ -2,12 +2,15 @@ package com.econo21.pinning;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -28,6 +31,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -45,10 +50,16 @@ public class AddActivity extends AppCompatActivity {
 
     private TextView textView;
     private TextView add_complete;
+    private TextView category;
     private ImageView add_back;
     private EditText pin_name, pin_content;
     private ArrayList<Uri> photo;
-    List<String> downloadURL;
+    private ImageButton btn_category;
+    private RecyclerView category_recyclerview;
+    private List<String> downloadURL;
+
+    private ArrayList<Category> categoryArrayList = new ArrayList<>();
+    CategoryAdapter categoryAdapter;
 
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser(); // 로그인한 유저의 정보
     String uid = user != null ? user.getUid():null;
@@ -59,10 +70,12 @@ public class AddActivity extends AppCompatActivity {
 
     CustomProgressDialog dialog;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
+        init();
 
         Intent intent = getIntent();
         String address = intent.getStringExtra("address");
@@ -73,19 +86,25 @@ public class AddActivity extends AppCompatActivity {
             photo = (ArrayList<Uri>)intent.getSerializableExtra("photo");
         }
 
+        btn_category = findViewById(R.id.btn_category);
+        btn_category.setOnClickListener(onClickListener);
+
+        category = findViewById(R.id.category);
+        category_recyclerview = findViewById(R.id.category_recyclerview);
+        category_recyclerview.setLayoutManager(new LinearLayoutManager(AddActivity.this, LinearLayoutManager.VERTICAL,false));
+
+        categoryAdapter = new CategoryAdapter(categoryArrayList, getApplicationContext(), category, category_recyclerview);
+        category_recyclerview.setAdapter(categoryAdapter);
+
         pin_name = findViewById(R.id.pin_name);
         pin_content = findViewById(R.id.pin_content);
 
         textView = findViewById(R.id.textView);
         textView.setText(address);
 
+
         add_back = findViewById(R.id.add_back);
-        add_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        add_back.setOnClickListener(onClickListener);
 
         dialog = new CustomProgressDialog(AddActivity.this);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -156,7 +175,29 @@ public class AddActivity extends AppCompatActivity {
             }
 
         });
+
     }
+
+    View.OnClickListener onClickListener = new View.OnClickListener() {
+        boolean state = true;
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.btn_category:
+                    if(state){
+                        category_recyclerview.setVisibility(View.VISIBLE);
+                        state = false;
+                    }else{
+                        category_recyclerview.setVisibility(View.GONE);
+                        state = true;
+                    }
+                    break;
+                case R.id.add_back:
+                    finish();
+                    break;
+            }
+        }
+    };
 
     private void upload(String x, String y, List<String> result){
 
@@ -166,23 +207,7 @@ public class AddActivity extends AppCompatActivity {
         pin.put("y", y);
         pin.put("content", pin_content.getText().toString());
         pin.put("photo", result);
-
-        /*
-        db.collection("Pin")
-                .document(uid)
-                .set(pin)
-                .addOnSuccessListener(new OnSuccessListener() {
-                    @Override
-                    public void onSuccess(Object o) {
-                        Log.d("@@@","AddActivity: Pin 추가 성공");
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d("@@@","AddActivity: Pin 추가 실패");
-            }
-        });
-         */
+        pin.put("category", categoryAdapter.getDbCategory());
 
         db.collection("user")
                 .document(uid)
@@ -201,5 +226,26 @@ public class AddActivity extends AppCompatActivity {
         });
 
     }
+
+    private void init(){
+
+        db.collection("user").document(uid).collection("category").get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            for(QueryDocumentSnapshot document : task.getResult()){
+                                Log.d("@@@", "AddActivity: " + document.getId() + "=>" + document.getData() );
+                                categoryArrayList.add(document.toObject(Category.class));
+                            }
+                        }else {
+                            Log.d("@@@", "MainActivity: Error getting document");
+                        }
+                    }
+                });
+
+
+    }
+
 
 }

@@ -85,7 +85,7 @@ public class LocationActivity extends AppCompatActivity {
                 // 빈칸일 경우에는 안넘어가도록 조건문 필요
                 Intent intent = new Intent(LocationActivity.this, AddActivity.class);
                 if(locationAdapter.getX() == null){
-                    intent.putExtra("address", mSearchEdit.getText().toString());
+                    intent.putExtra("address", mSearchEdit.getText().toString().replace("대한민국 ",""));
                     intent.putExtra("x", String.valueOf(longitude));
                     intent.putExtra("y" ,String.valueOf(latitude));
                 }else{

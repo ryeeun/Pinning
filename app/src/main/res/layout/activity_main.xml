@@ -40,7 +40,7 @@
             android:layout_marginLeft="15dp"
             android:layout_weight="1"
             android:background="#00FFFFFF"
-            android:hint="핀명을 입력하세요" />
+            android:hint="핀명/카테고리명을 입력하세요" />
 
         <ImageButton
             android:id="@+id/btn_test"
