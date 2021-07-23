@@ -5,14 +5,16 @@ public class Pin {
     private String x;
     private String y;
     private String category;
+    private String color;
 
     public Pin(){}
 
-    public Pin(String name, String x, String y, String category){
+    public Pin(String name, String x, String y, String category, String color){
         this.pin_name = name;
         this.x = x;
         this.y = y;
         this.category = category;
+        this.color = color;
     }
 
     public String getPin_name(){
@@ -28,4 +30,7 @@ public class Pin {
     }
 
     public String getCategory() { return category; }
+
+    public String getColor() { return color; }
+
 }

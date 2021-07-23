@@ -42,13 +42,21 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.econo21.pinning.ImageActivity;
+import com.econo21.pinning.MypageActivity;
+import com.econo21.pinning.Pin;
+import com.econo21.pinning.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -82,8 +90,12 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
     private ViewGroup mapViewContainer;
     private ImageButton btn_move;
     private EditText et_id;
+    private Spinner spinner;
     private MapPOIItem[] customMark;
     private ArrayList<MapPOIItem> searchMark = new ArrayList<>();
+    String[] item = {"핀명", "카테고리"};
+    String selected = "핀명";
+    private ArrayList<Category> categoryArrayList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
                                 Log.d("@@@", "pin - " + pin);
                                 MapPOIItem marker = new MapPOIItem();
                                 marker.setItemName(pin.getPin_name());
-                                marker.setUserObject(pin.getCategory());
+                                marker.setUserObject(new String[] {pin.getCategory(), pin.getColor()});
                                 marker.setMapPoint(MapPoint.mapPointWithGeoCoord(Double.parseDouble(pin.getY()), Double.parseDouble(pin.getX())));
                                 marker.setMarkerType(MapPOIItem.MarkerType.CustomImage); // 마커타입을 커스텀 마커로 지정.
                                 chooseImage(pin, marker); //마커 이미지 설정
@@ -167,6 +179,24 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
         });
 
 
+        spinner = (Spinner)findViewById(R.id.spinner);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selected = item[position];
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
         et_id = findViewById(R.id.et_id);
         et_id.addTextChangedListener(new TextWatcher() {
             @Override
@@ -181,9 +211,19 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
                     mapView.removeAllPOIItems();
                     Log.d("@@@","MainActivity- onTextChanged: 입력됨");
                     searchMark.clear();
-                    for(MapPOIItem mItem : customMark){
-                        if(mItem.getItemName().contains(s)){
-                            searchMark.add(mItem);
+                    if(selected.equals("핀명")){
+                        for(MapPOIItem mItem : customMark){
+                            if(mItem.getItemName().contains(s)){
+                                searchMark.add(mItem);
+                            }
+                        }
+                    }
+                    else{
+                        for(MapPOIItem mItem : customMark){
+                            String[] d = (String[]) mItem.getUserObject();
+                            if(d[0].contains(s)){
+                                searchMark.add(mItem);
+                            }
                         }
                     }
                     mapView.addPOIItems(searchMark.toArray(new MapPOIItem[searchMark.size()]));
@@ -198,13 +238,10 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
 
             }
         });
-
-
-
     }
 
     private void chooseImage(Pin pin, MapPOIItem marker){
-        switch (pin.getCategory()){
+        switch (pin.getColor()){
             case "black":
                 marker.setCustomImageResourceId(R.drawable.pin_black_64);
                 break;
@@ -429,9 +466,10 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
         @Override
         public View getCalloutBalloon(MapPOIItem poiItem){
             TextView click_text;
+            String[] s = (String[]) poiItem.getUserObject();
             click_text = mCalloutBalloon.findViewById(R.id.textView);
-            ((TextView) mCalloutBalloon.findViewById(R.id.ball_name)).setText(poiItem.getItemName().toString());
-            ((TextView) mCalloutBalloon.findViewById(R.id.ball_address)).setText(poiItem.getUserObject().toString());
+            ((TextView) mCalloutBalloon.findViewById(R.id.ball_name)).setText(poiItem.getItemName());
+            ((TextView) mCalloutBalloon.findViewById(R.id.ball_address)).setText(s[0]);
 
             return mCalloutBalloon;
         }

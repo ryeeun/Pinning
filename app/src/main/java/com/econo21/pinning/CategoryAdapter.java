@@ -22,7 +22,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     TextView textView;
     ArrayList<Category> items;
     RecyclerView recyclerView;
-    private String dbCategory;
+    private String dbColor;
+    private String dbName;
 
     public CategoryAdapter(ArrayList<Category> items, Context context, TextView textView, RecyclerView recyclerView){
         this.context = context;
@@ -82,7 +83,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
             public void onClick(View v) {
                 textView.setText(category.getName());
                 recyclerView.setVisibility(View.GONE);
-                dbCategory = category.getColor();
+                dbColor = category.getColor();
+                dbName = category.getName();
             }
         });
     }
@@ -92,9 +94,10 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         return items.size();
     }
 
-    public String getDbCategory() {
-        return dbCategory;
+    public String getDbColor() {
+        return dbColor;
     }
+    public String getDbName() { return  dbName; }
 
     public class CategoryViewHolder extends RecyclerView.ViewHolder{
         ImageView categoryImage;

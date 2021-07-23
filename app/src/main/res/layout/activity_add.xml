@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -11,30 +11,19 @@
         android:id="@+id/location_activity"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="#000000"
+        android:background="#FFFFFF"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="0dp">
 
-        <TextView
-            android:id="@+id/add_complete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_marginRight="35dp"
-            android:text="완료"
-            android:textColor="#FFFFFF"
-            android:textSize="20dp"
-            />
-
         <ImageView
             android:id="@+id/add_back"
-            android:layout_width="102dp"
+            android:layout_width="50dp"
             android:layout_height="28dp"
             android:layout_gravity="left"
             android:src="@drawable/ic_baseline_chevron_left_24"
+            app:tint="#000000"
             tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="16dp"
-            app:tint="#FFFFFF"/>
+            tools:layout_editor_absoluteY="16dp" />
 
     </androidx.appcompat.widget.Toolbar>
 
@@ -43,7 +32,8 @@
         android:layout_height="match_parent"
         android:layout_marginLeft="50dp"
         android:layout_marginRight="50dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_below="@id/location_activity">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -100,7 +90,7 @@
             android:background="@drawable/border_bottom"
             android:text=""
             android:textSize="15dp"
-            android:gravity="bottom"
+            android:gravity="center_vertical"
             />
 
         <TextView
@@ -121,5 +111,13 @@
 
     </LinearLayout>
 
+    <Button
+        android:id="@+id/add_complete"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="#000000"
+        android:text="완료" />
 
-</LinearLayout>
+
+</RelativeLayout>

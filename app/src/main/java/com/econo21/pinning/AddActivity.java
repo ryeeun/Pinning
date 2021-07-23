@@ -144,8 +144,7 @@ public class AddActivity extends AppCompatActivity {
                                             if(downloadURL.size() == photo.size()){
                                                 dialog.dismiss();
                                                 upload(x, y, downloadURL);
-                                                Intent add_pin = new Intent(AddActivity.this, MainActivity.class);
-                                                startActivity(add_pin);
+                                                startActivity(new Intent(AddActivity.this, MainActivity.class));
                                             }
                                         }
                                     }).addOnFailureListener(new OnFailureListener() {
@@ -172,6 +171,9 @@ public class AddActivity extends AppCompatActivity {
 
                      */
                 }
+                dialog.dismiss();
+                upload(x, y, downloadURL);
+                startActivity(new Intent(AddActivity.this, MainActivity.class));
             }
 
         });
@@ -207,7 +209,8 @@ public class AddActivity extends AppCompatActivity {
         pin.put("y", y);
         pin.put("content", pin_content.getText().toString());
         pin.put("photo", result);
-        pin.put("category", categoryAdapter.getDbCategory());
+        pin.put("color", categoryAdapter.getDbColor());
+        pin.put("category", categoryAdapter.getDbName());
 
         db.collection("user")
                 .document(uid)

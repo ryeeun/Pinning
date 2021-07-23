@@ -31,25 +31,26 @@
         android:layout_marginTop="18dp"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
+        android:orientation="horizontal"
         android:background="@drawable/round_corner">
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="2"
+            />
 
         <EditText
             android:id="@+id/et_id"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="15dp"
             android:layout_weight="1"
             android:background="#00FFFFFF"
             android:hint="핀명/카테고리명을 입력하세요" />
 
-        <ImageButton
-            android:id="@+id/btn_test"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="6"
-            android:background="#00FFFFFF"
-            android:src="@drawable/ic_baseline_search_24"
-            app:tint="#000000" />
+
 
     </LinearLayout>
 

@@ -213,6 +213,6 @@ public class LocationActivity extends AppCompatActivity {
         }
 
         Address address = addresses.get(0);
-        return address.getAddressLine(0).toString()+"\n";
+        return address.getAddressLine(0).toString().trim();
     }
 }
