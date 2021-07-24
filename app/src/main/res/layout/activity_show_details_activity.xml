@@ -10,44 +10,48 @@
         android:id="@+id/location_activity"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="#E8E7E7"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="0dp">
 
         <TextView
-            android:id="@+id/add_complete"
+            android:id="@+id/details_correct"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:textSize="20dp"
-            android:layout_marginRight="35dp"
+            android:layout_marginRight="25dp"
             android:text="편집"
+            android:textColor="#000000"
             />
 
         <ImageView
-            android:id="@+id/add_back"
-            android:layout_width="102dp"
+            android:id="@+id/details_back"
+            android:layout_width="50dp"
             android:layout_height="28dp"
             android:layout_gravity="left"
             android:src="@drawable/ic_baseline_chevron_left_24"
             tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="16dp" />
+            tools:layout_editor_absoluteY="16dp"
+            app:tint="#000000"/>
 
     </androidx.appcompat.widget.Toolbar>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+        android:id="@+id/pin_photo"
         android:layout_width="match_parent"
         android:layout_height ="wrap_content"
         android:layout_marginTop="80dp"
+        android:layout_marginLeft="18dp"
+        android:layout_marginRight="18dp"
         android:layout_below="@+id/btn_gallery"
+        android:visibility="visible"
         />
 
     <EditText
         android:id="@+id/pin_category"
         android:layout_width="80dp"
         android:layout_height="50dp"
-        android:layout_below="@+id/recyclerView"
+        android:layout_below="@+id/pin_photo"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_marginStart="46dp"

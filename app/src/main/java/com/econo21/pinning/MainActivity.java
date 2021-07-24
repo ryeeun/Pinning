@@ -33,12 +33,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Parcelable;
 import android.os.Trace;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,6 +71,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import androidx.annotation.NonNull;
 
+import java.io.Serializable;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -95,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
     private ArrayList<MapPOIItem> searchMark = new ArrayList<>();
     String[] item = {"핀명", "카테고리"};
     String selected = "핀명";
-    private ArrayList<Category> categoryArrayList = new ArrayList<>();
+    private MarkerEventListener eventListener = new MarkerEventListener();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,6 +114,7 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
         mapViewContainer.addView(mapView);
 
         mapView.setCalloutBalloonAdapter(new CustomCalloutBalloonAdapter());
+        mapView.setPOIItemEventListener(eventListener);
 
         ArrayList<Pin> pinArr = new ArrayList<>();
         db.collection("user").document(uid).collection("pin").get()
@@ -127,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
                                 Log.d("@@@", "pin - " + pin);
                                 MapPOIItem marker = new MapPOIItem();
                                 marker.setItemName(pin.getPin_name());
-                                marker.setUserObject(new String[] {pin.getCategory(), pin.getColor()});
+                                marker.setUserObject(pin);
                                 marker.setMapPoint(MapPoint.mapPointWithGeoCoord(Double.parseDouble(pin.getY()), Double.parseDouble(pin.getX())));
                                 marker.setMarkerType(MapPOIItem.MarkerType.CustomImage); // 마커타입을 커스텀 마커로 지정.
                                 chooseImage(pin, marker); //마커 이미지 설정
@@ -153,6 +157,7 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
                     case R.id.menu_Plus:
                         Intent picture_select = new Intent(MainActivity.this, ImageActivity.class );
                         startActivity(picture_select);
+                        finish();
                         break;
                     case R.id.menu_Home:
                         break;
@@ -220,8 +225,8 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
                     }
                     else{
                         for(MapPOIItem mItem : customMark){
-                            String[] d = (String[]) mItem.getUserObject();
-                            if(d[0].contains(s)){
+                            Pin d = (Pin) mItem.getUserObject();
+                            if(d.getCategory().contains(s)){
                                 searchMark.add(mItem);
                             }
                         }
@@ -466,10 +471,10 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
         @Override
         public View getCalloutBalloon(MapPOIItem poiItem){
             TextView click_text;
-            String[] s = (String[]) poiItem.getUserObject();
+            Pin s = (Pin) poiItem.getUserObject();
             click_text = mCalloutBalloon.findViewById(R.id.textView);
             ((TextView) mCalloutBalloon.findViewById(R.id.ball_name)).setText(poiItem.getItemName());
-            ((TextView) mCalloutBalloon.findViewById(R.id.ball_address)).setText(s[0]);
+            ((TextView) mCalloutBalloon.findViewById(R.id.ball_address)).setText(s.getCategory());
 
             return mCalloutBalloon;
         }
@@ -480,6 +485,31 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
         }
 
     }
+
+    class MarkerEventListener implements MapView.POIItemEventListener{
+        @Override
+        public void onPOIItemSelected(MapView mapView, MapPOIItem poiItem){
+
+        }
+        @Override
+        public void onCalloutBalloonOfPOIItemTouched(MapView mapView, MapPOIItem poiItem){
+
+        }
+
+        @Override
+        public void onCalloutBalloonOfPOIItemTouched(MapView mapView, MapPOIItem poiItem, MapPOIItem.CalloutBalloonButtonType buttonType){
+            Intent intent = new Intent(MainActivity.this, ShowDetailsActivity.class);
+            intent.putExtra("pin", (Pin) poiItem.getUserObject());
+            startActivity(intent);
+        }
+
+        @Override
+        public void onDraggablePOIItemMoved(MapView mapView, MapPOIItem poiItem, MapPoint mapPoint){
+
+        }
+    }
+
+
 }
 
 

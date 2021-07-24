@@ -144,7 +144,9 @@ public class AddActivity extends AppCompatActivity {
                                             if(downloadURL.size() == photo.size()){
                                                 dialog.dismiss();
                                                 upload(x, y, downloadURL);
-                                                startActivity(new Intent(AddActivity.this, MainActivity.class));
+                                                Intent intent = new Intent(AddActivity.this, MainActivity.class);
+                                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                startActivity(intent);
                                             }
                                         }
                                     }).addOnFailureListener(new OnFailureListener() {
@@ -170,10 +172,14 @@ public class AddActivity extends AppCompatActivity {
                     timer.schedule(timerTask,15000);
 
                      */
+                }else{
+                    dialog.dismiss();
+                    upload(x, y, downloadURL);
+                    Intent intent1 = new Intent(AddActivity.this, MainActivity.class);
+                    intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent1);
                 }
-                dialog.dismiss();
-                upload(x, y, downloadURL);
-                startActivity(new Intent(AddActivity.this, MainActivity.class));
+
             }
 
         });
@@ -207,7 +213,7 @@ public class AddActivity extends AppCompatActivity {
         pin.put("pin_name", pin_name.getText().toString());
         pin.put("x", x);
         pin.put("y", y);
-        pin.put("content", pin_content.getText().toString());
+        pin.put("contents", pin_content.getText().toString());
         pin.put("photo", result);
         pin.put("color", categoryAdapter.getDbColor());
         pin.put("category", categoryAdapter.getDbName());

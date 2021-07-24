@@ -74,6 +74,7 @@ public class ImageActivity extends AppCompatActivity {
         image_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                startActivity(new Intent(ImageActivity.this, MainActivity.class));
                 finish();
             }
         });
