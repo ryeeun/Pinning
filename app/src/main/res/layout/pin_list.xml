@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:padding="8dp"
+    android:layout_height="wrap_content"
+    >
+
+    <ImageView
+        android:id="@+id/list_image"
+        android:layout_width="100dp"
+        android:layout_height="100dp" />
+
+    <TextView
+        android:id="@+id/list_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="핀명"
+        android:textColor="#070000"
+        android:fontFamily="@font/dxbold"/>
+
+    <TextView
+        android:id="@+id/list_category"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="카테고리"
+        android:textColor="#9F9F9F"
+        android:textSize="12dp"
+        android:fontFamily="@font/dxbold"/>
+
+</LinearLayout>
