@@ -3,15 +3,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/ball_view"
-    android:layout_width="200dp"
-    android:layout_height="60dp"
-    android:background="#FFFFFF"
+    android:layout_width="150dp"
+    android:layout_height="wrap_content"
     app:cardCornerRadius="8px">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="200dp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:background="#FFFFFF">
+        android:background="#000000">
 
         <TextView
             android:id="@+id/ball_name"
@@ -21,8 +20,9 @@
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
             android:text="장소명"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="12dp"
+            android:fontFamily="@font/dxbold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -30,9 +30,11 @@
             android:id="@+id/ball_address"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
             android:text="카테고리"
-            android:textColor="#6C6B6B"
+            android:textColor="#9F9F9F"
             android:textSize="10dp"
+            android:fontFamily="@font/dxbold"
             app:layout_constraintStart_toStartOf="@+id/ball_name"
             app:layout_constraintTop_toBottomOf="@+id/ball_name" />
 
@@ -44,10 +46,12 @@
             android:layout_marginRight="8dp"
             android:layout_marginBottom="8dp"
             android:text="클릭해서 추가 정보"
-            android:textColor="#6C6B6B"
+            android:textColor="#9F9F9F"
             android:textSize="10dp"
+            android:fontFamily="@font/dxbold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ball_address" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

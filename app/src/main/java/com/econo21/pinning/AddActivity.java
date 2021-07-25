@@ -57,6 +57,7 @@ public class AddActivity extends AppCompatActivity {
     private ImageButton btn_category;
     private RecyclerView category_recyclerview;
     private List<String> downloadURL;
+    private List<String> uploadURI;
 
     private ArrayList<Category> categoryArrayList = new ArrayList<>();
     CategoryAdapter categoryAdapter;
@@ -117,10 +118,12 @@ public class AddActivity extends AppCompatActivity {
                 dialog.show();
                 Log.d("@@@", "AddAcitivy: onClick");
                 if(photo != null){
+                    uploadURI = new ArrayList<>();
                     downloadURL = new ArrayList<>();
                     Log.d("@@@", "AddActivity: photo != null");
                     for(int i=0; i<photo.size();i++){
-                        StorageReference localRef = storageRef.child(uid + "/" +photo.get(i).getLastPathSegment());
+                        String s = uid + "/" +photo.get(i).getLastPathSegment();
+                        StorageReference localRef = storageRef.child(s);
                         UploadTask uploadTask = localRef.putFile(photo.get(i));
                         int finalI = i;
                         uploadTask.addOnFailureListener(new OnFailureListener() {
@@ -132,10 +135,11 @@ public class AddActivity extends AppCompatActivity {
                             @Override
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                 Log.d("@@@","AddActivity: 업로드 성공");
+                                uploadURI.add(s);
 
                                 StorageReference pathReference = storageRef.child(uid);
                                 if(pathReference != null){
-                                    StorageReference download = storageRef.child(uid +"/" + photo.get(finalI).getLastPathSegment());
+                                    StorageReference download = storageRef.child(s);
                                     download.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Uri> task) {
@@ -143,7 +147,7 @@ public class AddActivity extends AppCompatActivity {
                                             downloadURL.add(task.getResult().toString());
                                             if(downloadURL.size() == photo.size()){
                                                 dialog.dismiss();
-                                                upload(x, y, downloadURL);
+                                                upload(x, y, downloadURL, uploadURI);
                                                 Intent intent = new Intent(AddActivity.this, MainActivity.class);
                                                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                                 startActivity(intent);
@@ -174,7 +178,7 @@ public class AddActivity extends AppCompatActivity {
                      */
                 }else{
                     dialog.dismiss();
-                    upload(x, y, downloadURL);
+                    upload(x, y, downloadURL,uploadURI);
                     Intent intent1 = new Intent(AddActivity.this, MainActivity.class);
                     intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent1);
@@ -207,7 +211,11 @@ public class AddActivity extends AppCompatActivity {
         }
     };
 
-    private void upload(String x, String y, List<String> result){
+    private void upload(String x, String y, List<String> result, List<String> uploadURI){
+
+        DocumentReference docRef = db.collection("user")
+                .document(uid)
+                .collection("pin").document();
 
         Map<String, Object> pin = new HashMap<>();
         pin.put("pin_name", pin_name.getText().toString());
@@ -215,17 +223,17 @@ public class AddActivity extends AppCompatActivity {
         pin.put("y", y);
         pin.put("contents", pin_content.getText().toString());
         pin.put("photo", result);
+        pin.put("uri", uploadURI);
         pin.put("color", categoryAdapter.getDbColor());
         pin.put("category", categoryAdapter.getDbName());
+        pin.put("id", docRef.getId());
 
-        db.collection("user")
-                .document(uid)
-                .collection("pin")
-                .add(pin)
+
+        docRef.set(pin)
                 .addOnSuccessListener(new OnSuccessListener() {
                     @Override
                     public void onSuccess(Object o) {
-                        Log.d("@@@","AddActivity: Pin 추가 성공");
+                        Log.d("@@@","AddActivity: 자동id확인- " + docRef.getId());
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override

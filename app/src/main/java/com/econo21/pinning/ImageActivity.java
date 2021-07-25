@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.PermissionChecker;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -46,15 +47,17 @@ public class ImageActivity extends AppCompatActivity {
 
     private ImageView image_next;
     private ImageView image_back;
-    private ImageButton btn_gallery;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image);
 
+
         recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+
+        init();
 
         image_next = findViewById(R.id.image_next);
         image_next.setOnClickListener(new View.OnClickListener() {
@@ -79,47 +82,42 @@ public class ImageActivity extends AppCompatActivity {
             }
         });
 
-        btn_gallery = findViewById(R.id.btn_gallery);
-        btn_gallery.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_PICK);
-                intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-                startActivityResult.launch(intent);
-            }
-
-            ActivityResultLauncher<Intent> startActivityResult = registerForActivityResult(
-                    new ActivityResultContracts.StartActivityForResult(),
-                    new ActivityResultCallback<ActivityResult>() {
-                        @Override
-                        public void onActivityResult(ActivityResult result) {
-                           if(result.getResultCode() == RESULT_OK && result != null){
-                               if(result.getData().getClipData() != null){
-                                   ClipData clipData = result.getData().getClipData();
-                                   if(clipData.getItemCount() >= 10){
-                                       Toast.makeText(ImageActivity.this, "사진은 10개까지 선택가능 합니다.", Toast.LENGTH_SHORT).show();
-                                       return;
-                                   }else if(clipData.getItemCount() == 1){
-                                       Uri filePath = clipData.getItemAt(0).getUri();
-                                       imageList = new ArrayList<>();
-                                       imageList.add(filePath);
-                                   }else if(clipData.getItemCount() > 1 && clipData.getItemCount() < 10){
-                                       imageList = new ArrayList<>();
-                                       for(int i =0 ; i<clipData.getItemCount(); i++){
-                                           imageList.add(clipData.getItemAt(i).getUri());
-                                       }
-                                   }
-                               }
-
-                               UriImageAdapter adapter = new UriImageAdapter(imageList, ImageActivity.this);
-                               recyclerView.setAdapter(adapter);
-                           }
-                        }
-                    });
-        });
 
     }
 
+    private void init(){
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        startActivityResult.launch(intent);
+    }
 
+    ActivityResultLauncher<Intent> startActivityResult = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if(result.getResultCode() == RESULT_OK && result != null){
+                        if(result.getData().getClipData() != null){
+                            ClipData clipData = result.getData().getClipData();
+                            if(clipData.getItemCount() >= 10){
+                                Toast.makeText(ImageActivity.this, "사진은 10개까지 선택가능 합니다.", Toast.LENGTH_SHORT).show();
+                                return;
+                            }else if(clipData.getItemCount() == 1){
+                                Uri filePath = clipData.getItemAt(0).getUri();
+                                imageList = new ArrayList<>();
+                                imageList.add(filePath);
+                            }else if(clipData.getItemCount() > 1 && clipData.getItemCount() < 10){
+                                imageList = new ArrayList<>();
+                                for(int i =0 ; i<clipData.getItemCount(); i++){
+                                    imageList.add(clipData.getItemAt(i).getUri());
+                                }
+                            }
+                        }
+
+                        UriImageAdapter adapter = new UriImageAdapter(imageList, ImageActivity.this);
+                        recyclerView.setAdapter(adapter);
+                    }
+                }
+            });
 }

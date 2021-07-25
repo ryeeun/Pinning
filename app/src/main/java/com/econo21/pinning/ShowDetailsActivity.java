@@ -1,41 +1,76 @@
 package com.econo21.pinning;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TableLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ShowDetailsActivity extends AppCompatActivity {
 
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser(); // 로그인한 유저의 정보
+    private String uid = user != null ? user.getUid():null;
+
+    FirebaseStorage storage = FirebaseStorage.getInstance();
+    StorageReference storageRef = storage.getReference();
+
     private RecyclerView pin_photo;
     private ImageView details_back;
-    private EditText pin_category;
-    private EditText pin_name;
-    private EditText pin_contents;
+    private TextView pin_category;
+    private TextView pin_name;
+    private TextView pin_contents;
+    private Button details_delete;
+    private ImageButton act_more;
+    private TableLayout tableLayout;
+    private Button details_correct;
 
     private List<String> photo;
     private String contents;
     private ArrayList<Uri> arr = new ArrayList<>();
+    private String activity;
+    boolean isUp = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_details_activity);
+        final Animation translateup = AnimationUtils.loadAnimation(ShowDetailsActivity.this, R.anim.translate_up);
 
         Intent intent = getIntent();
         Pin pin = (Pin) intent.getSerializableExtra("pin");
-
-        photo = pin.getPhoto();
-        contents = pin.getContents();
+        activity = intent.getStringExtra("activity");
 
         pin_photo = findViewById(R.id.pin_photo);
         pin_photo.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
@@ -48,6 +83,46 @@ public class ShowDetailsActivity extends AppCompatActivity {
             }
         });
 
+        act_more = findViewById(R.id.act_more);
+        tableLayout = findViewById(R.id.page);
+
+        act_more.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isUp){
+                    // 페이지 올라왔을 때 처리 부분
+                    tableLayout.setVisibility(View.INVISIBLE);
+                    isUp = false;
+                }
+                else{
+                    tableLayout.setVisibility(View.VISIBLE);
+                    tableLayout.startAnimation(translateup);
+                    isUp = true;
+                }
+            }
+        });
+
+        details_delete = findViewById(R.id.details_delete);
+        details_delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder alert_confirm = new AlertDialog.Builder(ShowDetailsActivity.this);
+                alert_confirm.setMessage("Pin을 삭제하시겠습니까?").setCancelable(false).setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        deleteDoc(pin.getId(), pin.getUri());
+                    }
+                });
+                alert_confirm.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) { }
+                });
+                alert_confirm.show();
+
+
+            }
+        });
+
         pin_category = findViewById(R.id.pin_category);
         pin_category.setText(pin.getCategory());
         pin_name = findViewById(R.id.pin_name);
@@ -55,6 +130,7 @@ public class ShowDetailsActivity extends AppCompatActivity {
         pin_contents = findViewById(R.id.pin_content);
         pin_contents.setText(pin.getContents());
 
+        photo = pin.getPhoto();
         if(photo != null){
             for(String s : photo){
                 arr.add(Uri.parse(s));
@@ -63,5 +139,47 @@ public class ShowDetailsActivity extends AppCompatActivity {
 
         UriImageAdapter adapter = new UriImageAdapter(arr, ShowDetailsActivity.this);
         pin_photo.setAdapter(adapter);
+    }
+
+    private void deleteDoc(String pid, List<String> pfile){
+        db.collection("user").document(uid).collection("pin").document(pid)
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("@@@", "ShowDetailsActivity: pin 삭제 - " + pid);
+                        Intent intent;
+                        if(activity.equals("MainActivity")){
+                            intent = new Intent(ShowDetailsActivity.this, MainActivity.class);
+                        }else{
+                            intent = new Intent(ShowDetailsActivity.this, MypageActivity.class);
+                        }
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("@@@","ShowDetailsActivity: pin 삭제 오류");
+                    }
+                });
+
+        if(pfile != null){
+            for(String s : pfile){
+                StorageReference desertRef = storageRef.child(s);
+                desertRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("@@@", "ShowDetailsActivity: storage파일 삭제 성공");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        Log.d("@@@", "ShowDetailsActivity: storage파일 삭제 실패");
+                    }
+                });
+            }
+        }
     }
 }

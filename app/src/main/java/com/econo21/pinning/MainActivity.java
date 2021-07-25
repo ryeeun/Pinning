@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
     private static final int PERMISSIONS_REQUEST_CODE = 100;
     String[] REQUIRED_PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION};
 
-    private final FirebaseFirestore db = FirebaseFirestore.getInstance();;
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser(); // 로그인한 유저의 정보
     private String uid = user != null ? user.getUid():null;
 
@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
                                 Log.d("@@@", "pin - " + pin);
                                 MapPOIItem marker = new MapPOIItem();
                                 marker.setItemName(pin.getPin_name());
-                                marker.setUserObject(pin);
+                                marker.setUserObject(pin); // pin 자체를 poiitem에 담음
                                 marker.setMapPoint(MapPoint.mapPointWithGeoCoord(Double.parseDouble(pin.getY()), Double.parseDouble(pin.getX())));
                                 marker.setMarkerType(MapPOIItem.MarkerType.CustomImage); // 마커타입을 커스텀 마커로 지정.
                                 chooseImage(pin, marker); //마커 이미지 설정
@@ -157,13 +157,13 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
                     case R.id.menu_Plus:
                         Intent picture_select = new Intent(MainActivity.this, ImageActivity.class );
                         startActivity(picture_select);
-                        finish();
                         break;
                     case R.id.menu_Home:
                         break;
                     case R.id.menu_Profile:
                         Intent profile = new Intent(MainActivity.this, MypageActivity.class);
                         startActivity(profile);
+                        finish();
                         break;
                 }
                 return false;
@@ -500,6 +500,7 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
         public void onCalloutBalloonOfPOIItemTouched(MapView mapView, MapPOIItem poiItem, MapPOIItem.CalloutBalloonButtonType buttonType){
             Intent intent = new Intent(MainActivity.this, ShowDetailsActivity.class);
             intent.putExtra("pin", (Pin) poiItem.getUserObject());
+            intent.putExtra("activity", "MainActivity");
             startActivity(intent);
         }
 

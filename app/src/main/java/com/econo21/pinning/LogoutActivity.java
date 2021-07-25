@@ -155,12 +155,12 @@ public class LogoutActivity extends AppCompatActivity {
                                     .addOnSuccessListener(new OnSuccessListener() {
                                         @Override
                                         public void onSuccess(Object o) {
-                                            Log.d("@@@","AddActivity: Pin 추가 성공");
+                                            Log.d("@@@","LogoutActivity: Category 추가 성공");
                                         }
                                     }).addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    Log.d("@@@","AddActivity: Pin 추가 실패");
+                                    Log.d("@@@","LogoutActivity: Category 추가 실패");
                                 }
                             });
                             builder.dismiss();

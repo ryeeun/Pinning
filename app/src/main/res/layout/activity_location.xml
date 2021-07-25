@@ -23,6 +23,7 @@
             android:text="위치"
             android:textColor="#000000"
             android:textSize="20dp"
+            android:fontFamily="@font/dxbold"
             tools:layout_editor_absoluteX="182dp"
             tools:layout_editor_absoluteY="11dp" />
 
@@ -68,7 +69,8 @@
                 android:layout_weight="1"
                 android:background="@drawable/border_bottom"
                 android:hint="검색할 장소를 입력하세요"
-                android:gravity="center_vertical"/>
+                android:gravity="center_vertical"
+                android:fontFamily="@font/dxbold"/>
 
             <ImageButton
                 android:id="@+id/btn_clear"

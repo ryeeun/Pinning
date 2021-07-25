@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
     <com.google.android.material.appbar.AppBarLayout
@@ -51,8 +52,10 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/bar">
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottom_nav_menu"
+        android:layout_below="@+id/bar"
+        android:layout_marginBottom="0dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -60,10 +63,10 @@
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/top_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:id="@+id/top_bar"
                 android:padding="16dp">
 
 
@@ -71,14 +74,14 @@
                     xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
-                    android:src="@drawable/ic_baseline_image_24"/>
+                    android:src="@drawable/ic_baseline_image_24" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="80dp"
+                    android:orientation="vertical"
                     android:paddingLeft="20dp"
-                    android:paddingRight="4dp"
-                    android:orientation="vertical">
+                    android:paddingRight="4dp">
 
 
                     <LinearLayout
@@ -95,19 +98,19 @@
 
 
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
                                 android:id="@+id/pins"
-                                android:textColor="@color/black"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:text="n"
+                                android:textColor="@color/black"
                                 android:textSize="18dp"
-                                android:textStyle="bold"/>
+                                android:textStyle="bold" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="pins"/>
+                                android:text="pins" />
 
                         </LinearLayout>
 
@@ -118,19 +121,19 @@
                             android:orientation="vertical">
 
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
                                 android:id="@+id/followers"
-                                android:textColor="@color/black"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:text="n"
+                                android:textColor="@color/black"
                                 android:textSize="18dp"
-                                android:textStyle="bold"/>
+                                android:textStyle="bold" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="followers"/>
+                                android:text="followers" />
 
                         </LinearLayout>
 
@@ -142,29 +145,29 @@
 
 
                             <TextView
+                                android:id="@+id/following"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:id="@+id/following"
-                                android:textColor="@color/black"
                                 android:layout_gravity="center"
                                 android:text="n"
+                                android:textColor="@color/black"
                                 android:textSize="18dp"
-                                android:textStyle="bold"/>
+                                android:textStyle="bold" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="following"/>
+                                android:text="following" />
 
                         </LinearLayout>
 
                     </LinearLayout>
 
                     <Button
+                        android:id="@+id/edit_profile"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:id="@+id/edit_profile"/>
+                        android:layout_marginTop="8dp" />
 
                 </LinearLayout>
 
@@ -172,37 +175,59 @@
 
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="-5dp"
-                android:layout_marginRight="-5dp"
                 android:id="@+id/last_bar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="-5dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="-5dp"
                 android:orientation="vertical">
 
-
-                <ImageButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:id="@+id/saved_fotos"
-                    android:src="@drawable/ic_baseline_list_24"
-                    style="?android:attr/buttonBarButtonStyle"/>
-
-                <androidx.recyclerview.widget.RecyclerView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/recycler_view">
+                    android:orientation="horizontal">
 
-                </androidx.recyclerview.widget.RecyclerView>
+                    <ImageButton
+                        android:id="@+id/saved_fotos"
+                        style="?android:attr/buttonBarButtonStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:src="@drawable/ic_baseline_list_24" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="15"
+                        android:text="핀 목록" />
+
+                </LinearLayout>
+
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="visible"/>
 
             </LinearLayout>
-
-
 
 
         </LinearLayout>
 
     </ScrollView>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_nav_menu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="0dp"
+        android:background="#fff"
+        app:itemIconTint="@color/black"
+        app:itemTextColor="#0C0000"
+        app:menu="@menu/bottom_nav_menu" />
 
 </RelativeLayout>

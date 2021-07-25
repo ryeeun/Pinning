@@ -45,7 +45,8 @@
                 android:layout_width="200dp"
                 android:layout_height="match_parent"
                 android:text="카테고리 선택"
-                android:gravity="center_vertical"/>
+                android:gravity="center_vertical"
+                android:fontFamily="@font/dxbold"/>
 
             <ImageButton
                 android:id="@+id/btn_category"
@@ -59,21 +60,24 @@
             android:id="@+id/category_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:fontFamily="@font/dxbold"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:text="핀 이름"
-            android:textColor="#6C6B6B"/>
+            android:textColor="#6C6B6B"
+            android:fontFamily="@font/dxbold"/>
 
         <EditText
             android:id="@+id/pin_name"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@drawable/border_bottom"
-            android:textSize="15dp" />
+            android:textSize="15dp"
+            android:fontFamily="@font/dxbold"/>
 
 
         <TextView
@@ -81,7 +85,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             android:text="장소명"
-            android:textColor="#6C6B6B"/>
+            android:textColor="#6C6B6B"
+            android:fontFamily="@font/dxbold"/>
 
         <TextView
             android:id="@+id/textView"
@@ -91,6 +96,7 @@
             android:text=""
             android:textSize="15dp"
             android:gravity="center_vertical"
+            android:fontFamily="@font/dxbold"
             />
 
         <TextView
@@ -99,7 +105,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             android:text="글쓰기"
-            android:textColor="#6C6B6B"/>
+            android:textColor="#6C6B6B"
+            android:fontFamily="@font/dxbold"/>
 
         <EditText
             android:id="@+id/pin_content"
@@ -107,7 +114,8 @@
             android:layout_height="wrap_content"
             android:background="@android:drawable/editbox_background_normal"
             android:lines="8"
-            android:textSize="15dp" />
+            android:textSize="15dp"
+            android:fontFamily="@font/dxbold"/>
 
     </LinearLayout>
 
@@ -117,7 +125,8 @@
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:background="#000000"
-        android:text="완료" />
+        android:text="완료"
+        android:fontFamily="@font/dxbold"/>
 
 
 </RelativeLayout>
