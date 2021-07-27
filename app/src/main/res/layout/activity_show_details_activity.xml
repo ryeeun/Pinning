@@ -122,6 +122,14 @@
         >
         <TableLayout>
             <Button
+                android:id="@+id/scrap_pin"
+                android:text="지도에 추가하기"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/dxbold"
+                android:visibility="gone"/>
+
+            <Button
                 android:id="@+id/details_correct"
                 android:text="수정"
                 android:layout_width="wrap_content"
@@ -131,6 +139,12 @@
                 android:id="@+id/details_delete"
                 android:text="삭제"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/dxbold"/>
+            <Button
+                android:id="@+id/pin_scrap"
+                android:text="스크랩"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/dxbold"/>
         </TableLayout>

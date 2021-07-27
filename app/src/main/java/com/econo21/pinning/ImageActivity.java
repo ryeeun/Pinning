@@ -47,12 +47,22 @@ public class ImageActivity extends AppCompatActivity {
 
     private ImageView image_next;
     private ImageView image_back;
+    private String x;
+    private String y;
+    private String address;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image);
 
+        Intent intent = getIntent();
+        String s = intent.getStringExtra("activity");
+        if(s.equals("ShowDetailsActivity")){
+            x = intent.getStringExtra("x");
+            y = intent.getStringExtra("y");
+            address = intent.getStringExtra("address");
+        }
 
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
@@ -63,13 +73,21 @@ public class ImageActivity extends AppCompatActivity {
         image_next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ImageActivity.this, LocationActivity.class);
-                if(imageList != null){
-                    Log.d("@@@", "ImageActivity: imageList != null");
-                    Log.d("@@@", "ImageActivity- imageList: " + imageList);
-                    intent.putExtra("photo", imageList);
+                Intent intent1;
+                if(s.equals("ShowDetailsActivity")){
+                    intent1 = new Intent(ImageActivity.this, AddActivity.class);
+                    intent1.putExtra("activity", "ImageActivity");
+                    intent1.putExtra("x", x);
+                    intent1.putExtra("y", y);
+                    intent1.putExtra("address", address);
+                }else{
+                    intent1 = new Intent(ImageActivity.this, LocationActivity.class);
                 }
-                startActivity(intent);
+
+                if(imageList != null){
+                    intent1.putExtra("photo", imageList);
+                }
+                startActivity(intent1);
             }
         });
 

@@ -2,21 +2,28 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/menu_Plus"
-        android:enabled="true"
-        android:title="Plus"
-        android:icon="@drawable/ic_baseline_add_location_alt_24"/>
-
-    <item
         android:id="@+id/menu_Home"
         android:enabled="true"
         android:title="Home"
         android:icon="@drawable/ic_baseline_home_24"/>
 
     <item
+        android:id="@+id/menu_Plus"
+        android:enabled="true"
+        android:title="Plus"
+        android:icon="@drawable/ic_baseline_add_location_alt_24"/>
+
+    <item
+        android:id="@+id/menu_News"
+        android:enabled="true"
+        android:title="Pin"
+        android:icon="@drawable/ic_baseline_pin_drop_24"/>
+
+
+    <item
         android:id="@+id/menu_Profile"
         android:enabled="true"
-        android:title="Profile"
+        android:title="My"
         android:icon="@drawable/ic_baseline_account_circle_24"/>
 
 </menu>

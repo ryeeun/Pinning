@@ -22,9 +22,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.kakao.usermgmt.UserManagement;
-import com.kakao.usermgmt.callback.LogoutResponseCallback;
-import com.kakao.usermgmt.response.model.User;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,7 +29,6 @@ import java.util.Map;
 public class LogoutActivity extends AppCompatActivity {
 
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-
     private Button btn_logout, btn_delete;
     private ImageButton add_category;
 

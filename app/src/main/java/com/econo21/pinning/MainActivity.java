@@ -51,6 +51,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -92,6 +93,9 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
     private MapView mapView;
     private ViewGroup mapViewContainer;
     private ImageButton btn_move;
+    private ImageButton ib_menu;
+    private ImageButton ib_search;
+    private LinearLayout linearLayout;
     private EditText et_id;
     private Spinner spinner;
     private MapPOIItem[] customMark;
@@ -149,13 +153,35 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
                     }
                 });
 
+        ib_menu = findViewById(R.id.ib_menu);
         bottomNavigationView = findViewById(R.id.bottom_nav_menu);
+        ib_menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomNavigationView.setVisibility(View.VISIBLE);
+            }
+        });
+
+        ib_search = findViewById(R.id.ib_search);
+        linearLayout = findViewById(R.id.linearlayout);
+        ib_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                linearLayout.setVisibility(View.VISIBLE);
+            }
+        });
+
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch(item.getItemId()){
+                    case R.id.menu_News:
+                        startActivity(new Intent(MainActivity.this, NewsActivity.class));
+                        finish();
+                        break;
                     case R.id.menu_Plus:
                         Intent picture_select = new Intent(MainActivity.this, ImageActivity.class );
+                        picture_select.putExtra("activity", "MainActivity");
                         startActivity(picture_select);
                         break;
                     case R.id.menu_Home:
@@ -430,6 +456,8 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
     // 현재 위치로 옮긴 뒤에 지도를 이동하면 지도가 다시 현재 위치로 이동하는 걸 막기 위해 정의한 메소드
     public void onMapViewCenterPointMoved(MapView mapView, MapPoint mapPoint) {
         Log.i("디테일로그", "onMapViewCenterPointMoved");
+        bottomNavigationView.setVisibility(View.GONE);
+        linearLayout.setVisibility(View.GONE);
         mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOff);
     }
 

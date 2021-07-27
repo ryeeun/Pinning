@@ -21,6 +21,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.econo21.pinning.location.Document;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -147,7 +148,7 @@ public class AddActivity extends AppCompatActivity {
                                             downloadURL.add(task.getResult().toString());
                                             if(downloadURL.size() == photo.size()){
                                                 dialog.dismiss();
-                                                upload(x, y, downloadURL, uploadURI);
+                                                upload(x, y,address, downloadURL, uploadURI);
                                                 Intent intent = new Intent(AddActivity.this, MainActivity.class);
                                                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                                 startActivity(intent);
@@ -178,7 +179,7 @@ public class AddActivity extends AppCompatActivity {
                      */
                 }else{
                     dialog.dismiss();
-                    upload(x, y, downloadURL,uploadURI);
+                    upload(x, y,address, downloadURL,uploadURI);
                     Intent intent1 = new Intent(AddActivity.this, MainActivity.class);
                     intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent1);
@@ -211,7 +212,7 @@ public class AddActivity extends AppCompatActivity {
         }
     };
 
-    private void upload(String x, String y, List<String> result, List<String> uploadURI){
+    private void upload(String x, String y, String address, List<String> result, List<String> uploadURI){
 
         DocumentReference docRef = db.collection("user")
                 .document(uid)
@@ -221,6 +222,7 @@ public class AddActivity extends AppCompatActivity {
         pin.put("pin_name", pin_name.getText().toString());
         pin.put("x", x);
         pin.put("y", y);
+        pin.put("address", address);
         pin.put("contents", pin_content.getText().toString());
         pin.put("photo", result);
         pin.put("uri", uploadURI);
@@ -239,6 +241,16 @@ public class AddActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.d("@@@","AddActivity: Pin 추가 실패");
+            }
+        });
+
+        db.collection("PinFeed").document(docRef.getId()).set(pin).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
             }
         });
 

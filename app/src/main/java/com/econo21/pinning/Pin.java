@@ -7,6 +7,7 @@ public class Pin implements Serializable{
     private String pin_name;
     private String x;
     private String y;
+    private String address;
     private String category;
     private String color;
     private List<String> photo;
@@ -16,10 +17,11 @@ public class Pin implements Serializable{
 
     public Pin(){}
 
-    public Pin(String name, String x, String y, String category, String color, List<String> photo, List<String> uri, String contents, String id){
+    public Pin(String name, String x, String y,String address, String category, String color, List<String> photo, List<String> uri, String contents, String id){
         this.pin_name = name;
         this.x = x;
         this.y = y;
+        this.address = address;
         this.category = category;
         this.color = color;
         this.photo = photo;
@@ -40,6 +42,8 @@ public class Pin implements Serializable{
         return y;
     }
 
+    public String getAddress() {return address;}
+
     public String getCategory() { return category; }
 
     public String getColor() { return color; }
@@ -49,6 +53,8 @@ public class Pin implements Serializable{
     public List<String> getUri() {return uri;}  // image file in storage
 
     public String getContents() { return contents;}
+
+    public void setId(String id) { this.id = id; }
 
     public String getId() {return id;}
 

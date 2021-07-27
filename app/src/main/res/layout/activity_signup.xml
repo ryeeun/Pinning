@@ -3,13 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#E8E7E7"
     >
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/location_activity"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="#E8E7E7"
         app:layout_constraintTop_toTopOf="parent"
         >
 
@@ -20,6 +18,7 @@
             android:text="회원가입"
             android:textColor="#6C6B6B"
             android:textSize="20dp"
+            android:fontFamily="@font/dxbold"
              />
 
 
@@ -33,16 +32,6 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <ImageButton
-        android:id="@+id/kakao_signup_btn"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/finish_signup"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="224dp"
-        android:background="#00FFFFFF"
-        android:src="@drawable/kakao_login_medium_narrow" />
 
     <EditText
         android:id="@+id/mName"
@@ -52,9 +41,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="50dp"
         android:layout_marginTop="212dp"
-        android:background="@drawable/round_corner"
-        android:hint="   닉네임"
-        app:backgroundTint="#FFFFFF" />
+        android:background="@drawable/border_bottom"
+        android:hint="   닉네임" />
 
     <EditText
         android:id="@+id/mEmail"
@@ -64,9 +52,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="50dp"
         android:layout_marginTop="20dp"
-        android:background="@drawable/round_corner"
-        android:hint="   이메일"
-        app:backgroundTint="#FFFFFF" />
+        android:background="@drawable/border_bottom"
+        android:hint="   이메일" />
 
     <EditText
         android:id="@+id/mPassword"
@@ -77,8 +64,7 @@
         android:layout_marginLeft="50dp"
         android:layout_marginTop="20dp"
         android:hint="   비밀번호"
-        android:background="@drawable/round_corner"
-        app:backgroundTint="#FFFFFF" />
+        android:background="@drawable/border_bottom" />
 
     <EditText
         android:id="@+id/mPasswordCheck"
@@ -88,9 +74,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="50dp"
         android:layout_marginTop="20dp"
-        android:background="@drawable/round_corner"
-        android:hint="   비밀번호 확인"
-        app:backgroundTint="#FFFFFF" />
+        android:background="@drawable/border_bottom"
+        android:hint="   비밀번호 확인" />
 
     <Button
         android:id="@+id/finish_signup"

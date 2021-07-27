@@ -12,7 +12,6 @@
     <uses-feature android:name="android.hardware.camera" />
 
     <application
-        android:name=".GlobalApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -20,7 +19,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Pinning_Map"
         android:usesCleartextTraffic="true">
-        <activity android:name=".MypageActivity"></activity>
+        <activity
+            android:name=".CorrectActivity"
+            android:label="@string/title_activity_correct"
+            android:theme="@style/Theme.Pinning_Map.NoActionBar" />
+        <activity
+            android:name=".NewsActivity"
+            android:label="@string/title_activity_news"
+            android:theme="@style/Theme.Pinning_Map.NoActionBar" />
+        <activity android:name=".MypageActivity" />
         <activity android:name=".ShowDetailsActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".SignupActivity" />
@@ -29,7 +36,8 @@
         <activity android:name=".LocationActivity" />
         <activity android:name=".ImageActivity" />
         <activity android:name=".MainActivity" />
-        <activity android:name=".StartActivity">
+        <activity android:name=".StartActivity"/>
+        <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
