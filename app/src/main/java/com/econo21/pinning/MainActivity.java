@@ -127,12 +127,10 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if(task.isSuccessful()){
                             for(QueryDocumentSnapshot document : task.getResult()){
-                                Log.d("@@@", "MainActiviy: " + document.getId() + "=>" + document.getData() );
                                 pinArr.add(document.toObject(Pin.class));
                             }
                             ArrayList<MapPOIItem> markerArr = new ArrayList<>();
                             for(Pin pin : pinArr){
-                                Log.d("@@@", "pin - " + pin);
                                 MapPOIItem marker = new MapPOIItem();
                                 marker.setItemName(pin.getPin_name());
                                 marker.setUserObject(pin); // pin 자체를 poiitem에 담음
@@ -240,7 +238,6 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
                 MapPOIItem[] searchPOI;
                 if(s.length() >= 1){
                     mapView.removeAllPOIItems();
-                    Log.d("@@@","MainActivity- onTextChanged: 입력됨");
                     searchMark.clear();
                     if(selected.equals("핀명")){
                         for(MapPOIItem mItem : customMark){

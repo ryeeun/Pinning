@@ -17,19 +17,31 @@ import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
-public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder> {
+public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder> implements OnItemLongClickListener {
     public Context context;
     TextView textView;
     ArrayList<Category> items;
     RecyclerView recyclerView;
     private String dbColor;
     private String dbName;
+    OnItemLongClickListener listener;
 
     public CategoryAdapter(ArrayList<Category> items, Context context, TextView textView, RecyclerView recyclerView){
         this.context = context;
         this.items = items;
         this.textView = textView;
         this.recyclerView = recyclerView;
+    }
+
+    public void setOnItemLongClickListener(OnItemLongClickListener listener){
+        this.listener = listener;
+    }
+
+    @Override
+    public void onItemLongClick(CategoryAdapter.CategoryViewHolder holder, View view, int position){
+        if(listener != null){
+            listener.onItemLongClick(holder,view,position);
+        }
     }
 
     @Override
@@ -44,7 +56,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     @Override
     public void onBindViewHolder(@NonNull CategoryViewHolder holder, int i){
         final Category category = items.get(i);
-        Log.d("@@@", "CategoryAdapter: category" + category.getName());
         holder.categoryName.setText(category.getName());
         switch (category.getColor()){
             case "black":
@@ -107,6 +118,21 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
             super(itemView);
             categoryImage = (ImageView) itemView.findViewById(R.id.category_image);
             categoryName = (TextView)itemView.findViewById(R.id.category_text);
+
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    int position = getAdapterPosition();
+                    if(listener != null){
+                        listener.onItemLongClick(CategoryViewHolder.this, v, position);
+                    }
+                    return true;
+                }
+            });
         }
+    }
+
+    public Category getItem(int position){
+        return items.get(position);
     }
 }

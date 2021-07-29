@@ -14,10 +14,11 @@ public class Pin implements Serializable{
     private List<String> uri;
     private String contents;
     private String id;
+    private boolean setting;
 
     public Pin(){}
 
-    public Pin(String name, String x, String y,String address, String category, String color, List<String> photo, List<String> uri, String contents, String id){
+    public Pin(String name, String x, String y,String address, String category, String color, List<String> photo, List<String> uri, String contents, String id, boolean setting){
         this.pin_name = name;
         this.x = x;
         this.y = y;
@@ -28,6 +29,7 @@ public class Pin implements Serializable{
         this.uri = uri;
         this.contents = contents;
         this.id = id;
+        this.setting = setting;
     }
 
     public String getPin_name(){
@@ -57,5 +59,7 @@ public class Pin implements Serializable{
     public void setId(String id) { this.id = id; }
 
     public String getId() {return id;}
+
+    public boolean isSetting() {return setting;}
 
 }

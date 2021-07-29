@@ -26,8 +26,6 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
     ArrayList<Pin> items;
     OnListItemClickListener listener;
 
-
-
     public ListAdapter(ArrayList<Pin> items, Context context){
         this.context = context;
         this.items = items;

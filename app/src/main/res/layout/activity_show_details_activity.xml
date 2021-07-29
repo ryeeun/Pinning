@@ -45,38 +45,54 @@
             android:id="@+id/pin_photo"
             android:layout_width="match_parent"
             android:layout_height ="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="15dp"
             android:layout_below="@id/pin_category"
             android:visibility="visible"
             />
 
         <TextView
+            android:id="@+id/setting"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_alignStart="@+id/pin_category"
+            android:layout_alignLeft="@+id/pin_category"
+            android:layout_marginStart="0dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginTop="65dp"
+            android:fontFamily="@font/dxbold"
+            android:gravity="bottom"
+            android:text="공개 핀"
+            android:textColor="#9F9F9F"
+            android:textSize="15dp" />
+
+        <TextView
+            android:id="@+id/pin_name"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_below="@+id/setting"
+            android:layout_alignStart="@+id/pin_category"
+            android:layout_alignLeft="@+id/pin_category"
+
+            android:fontFamily="@font/dxbold"
+            android:gravity="bottom"
+            android:hint="핀명"
+            android:textColor="#000000"
+            android:textSize="20dp" />
+
+        <TextView
             android:id="@+id/pin_category"
-            android:layout_width="80dp"
+            android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_below="@id/pin_name"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
             android:layout_marginStart="35dp"
             android:layout_marginLeft="35dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="10dp"
             android:gravity="bottom"
             android:hint="카테고리"
             android:textColor="#9F9F9F"
             android:textSize="15dp"
-            android:fontFamily="@font/dxbold"/>
-
-        <TextView
-            android:id="@+id/pin_name"
-            android:layout_width="150dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="80dp"
-            android:layout_alignStart="@+id/pin_category"
-            android:layout_alignLeft="@+id/pin_category"
-            android:gravity="bottom"
-            android:hint="핀명"
-            android:textColor="#000000"
-            android:textSize="20dp"
             android:fontFamily="@font/dxbold"/>
 
         <TextView
@@ -106,7 +122,7 @@
             android:layout_marginLeft="0dp"
             android:layout_marginTop="30dp"
             android:hint="핀 내용"
-            android:lines="6"
+            android:lines="10"
             android:textSize="15dp"
             android:textColor="#000000"
             android:fontFamily="@font/dxbold"/>

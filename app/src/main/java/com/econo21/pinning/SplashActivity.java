@@ -14,13 +14,13 @@ import android.widget.ImageView;
 public class SplashActivity extends AppCompatActivity {
 
     ImageView splashImage;
-
+    Animation anim;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        final Animation anim = AnimationUtils.loadAnimation(this, R.anim.translate_up);
+        anim = AnimationUtils.loadAnimation(this, R.anim.translate_up);
         splashImage = findViewById(R.id.splashImage);
         splashImage.startAnimation(anim);
 

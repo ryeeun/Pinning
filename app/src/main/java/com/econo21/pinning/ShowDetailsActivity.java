@@ -58,6 +58,7 @@ public class ShowDetailsActivity extends AppCompatActivity {
     private TextView pin_name;
     private TextView pin_contents;
     private TextView place_name;
+    private TextView setting;
     private Button details_delete;
     private ImageButton act_more;
     private TableLayout tableLayout;
@@ -69,6 +70,7 @@ public class ShowDetailsActivity extends AppCompatActivity {
     private ArrayList<Uri> arr = new ArrayList<>();
     private String activity;
     boolean isUp = false;
+    String settingCheck;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,9 +81,37 @@ public class ShowDetailsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Pin pin = (Pin) intent.getSerializableExtra("pin");
         activity = intent.getStringExtra("activity");
+        init();
+
+        if(pin.isSetting()) {
+            settingCheck = "공개 핀";
+        }else{
+            settingCheck ="비공개 핀";
+        }
 
         pin_photo = findViewById(R.id.pin_photo);
         pin_photo.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+
+        setting = findViewById(R.id.setting);
+        setting.setText(settingCheck);
+        place_name = findViewById(R.id.textView);
+        place_name.setText(pin.getAddress());
+        pin_category = findViewById(R.id.pin_category);
+        pin_category.setText(pin.getCategory());
+        pin_name = findViewById(R.id.pin_name);
+        pin_name.setText(pin.getPin_name());
+        pin_contents = findViewById(R.id.pin_content);
+        pin_contents.setText(pin.getContents());
+
+        photo = pin.getPhoto();
+        if(photo != null){
+            for(String s : photo){
+                arr.add(Uri.parse(s));
+            }
+        }
+
+        UriImageAdapter adapter = new UriImageAdapter(arr, ShowDetailsActivity.this);
+        pin_photo.setAdapter(adapter);
 
         details_back = findViewById(R.id.details_back);
         details_back.setOnClickListener(new View.OnClickListener() {
@@ -110,28 +140,6 @@ public class ShowDetailsActivity extends AppCompatActivity {
             }
         });
 
-
-        details_correct = findViewById(R.id.details_correct);
-        details_delete = findViewById(R.id.details_delete);
-        pin_scrap = findViewById(R.id.pin_scrap);
-        scrap_pin = findViewById(R.id.scrap_pin);
-
-        if(activity.equals("NewsActivity")){
-            details_correct.setVisibility(View.GONE);
-            details_delete.setVisibility(View.GONE);
-        }
-        else if(activity.equals("MypageActivity.scrap")){
-            pin_scrap.setVisibility(View.GONE);
-            details_correct.setVisibility(View.GONE);
-            scrap_pin.setVisibility(View.VISIBLE);
-        }
-        else if(activity.equals("MypageActivity.pin")){
-            pin_scrap.setVisibility(View.GONE);
-        }
-        else if(activity.equals("MainActivity")){
-            pin_scrap.setVisibility(View.GONE);
-        }
-
         scrap_pin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -143,6 +151,7 @@ public class ShowDetailsActivity extends AppCompatActivity {
                 startActivity(intent1);
             }
         });
+
         pin_scrap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -210,24 +219,30 @@ public class ShowDetailsActivity extends AppCompatActivity {
             }
         });
 
-        place_name = findViewById(R.id.textView);
-        place_name.setText(pin.getAddress());
-        pin_category = findViewById(R.id.pin_category);
-        pin_category.setText(pin.getCategory());
-        pin_name = findViewById(R.id.pin_name);
-        pin_name.setText(pin.getPin_name());
-        pin_contents = findViewById(R.id.pin_content);
-        pin_contents.setText(pin.getContents());
 
-        photo = pin.getPhoto();
-        if(photo != null){
-            for(String s : photo){
-                arr.add(Uri.parse(s));
-            }
+    }
+
+    private void init(){
+        details_correct = findViewById(R.id.details_correct);
+        details_delete = findViewById(R.id.details_delete);
+        pin_scrap = findViewById(R.id.pin_scrap);
+        scrap_pin = findViewById(R.id.scrap_pin);
+
+        if(activity.equals("NewsActivity")){
+            details_correct.setVisibility(View.GONE);
+            details_delete.setVisibility(View.GONE);
         }
-
-        UriImageAdapter adapter = new UriImageAdapter(arr, ShowDetailsActivity.this);
-        pin_photo.setAdapter(adapter);
+        else if(activity.equals("MypageActivity.scrap")){
+            pin_scrap.setVisibility(View.GONE);
+            details_correct.setVisibility(View.GONE);
+            scrap_pin.setVisibility(View.VISIBLE);
+        }
+        else if(activity.equals("MypageActivity.pin")){
+            pin_scrap.setVisibility(View.GONE);
+        }
+        else if(activity.equals("MainActivity")){
+            pin_scrap.setVisibility(View.GONE);
+        }
     }
 
     private void deleteDoc(String pid, List<String> pfile){
@@ -270,16 +285,19 @@ public class ShowDetailsActivity extends AppCompatActivity {
                 });
             }
         }
-        db.collection("PinFeed").document(pid).delete()
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                    }
-                 });
+
+        if(settingCheck.equals("공개 핀")){
+            db.collection("PinFeed").document(pid).delete()
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                }
+            });
+        }
     }
 
     private void deleteScrap(String pid){

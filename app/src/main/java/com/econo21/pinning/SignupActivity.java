@@ -24,6 +24,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 
 import java.util.HashMap;
@@ -32,6 +33,7 @@ import java.util.Map;
 public class SignupActivity extends AppCompatActivity {
 
     private FirebaseAuth firebaseAuth;
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     EditText mName, mEmail, mPassword, mPasswordCheck;
     ImageView signup_back;
     Button finish_signup;
@@ -88,13 +90,11 @@ public class SignupActivity extends AppCompatActivity {
 
                                 // 해쉬맵 테이블을 파이어베이스에 저장
                                 HashMap<Object, String> hashMap = new HashMap<>();
-                                hashMap.put("uid",uid);
                                 hashMap.put("email", email);
                                 hashMap.put("name", name);
 
-                                FirebaseDatabase database = FirebaseDatabase.getInstance();
-                                DatabaseReference reference = database.getReference("Users");
-                                reference.child(uid).setValue(hashMap);
+                                db.collection("user").document(user.getUid()).set(hashMap);
+
 
                                 // 가입이 이루어지면 가입 화면을 나감
                                 Intent intent = new Intent(SignupActivity.this, LoginActivity.class);

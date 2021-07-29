@@ -16,10 +16,13 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.econo21.pinning.location.Document;
 import com.google.android.gms.tasks.Continuation;
@@ -54,14 +57,16 @@ public class AddActivity extends AppCompatActivity {
     private TextView category;
     private ImageView add_back;
     private EditText pin_name, pin_content;
+    private Switch aSwitch;
     private ArrayList<Uri> photo;
     private ImageButton btn_category;
     private RecyclerView category_recyclerview;
     private List<String> downloadURL;
     private List<String> uploadURI;
-
     private ArrayList<Category> categoryArrayList = new ArrayList<>();
     CategoryAdapter categoryAdapter;
+    CustomProgressDialog dialog;
+    boolean switchCheck;
 
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser(); // 로그인한 유저의 정보
     String uid = user != null ? user.getUid():null;
@@ -69,9 +74,6 @@ public class AddActivity extends AppCompatActivity {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseStorage storage = FirebaseStorage.getInstance();
     StorageReference storageRef = storage.getReference();
-
-    CustomProgressDialog dialog;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,24 +91,32 @@ public class AddActivity extends AppCompatActivity {
         }
 
         btn_category = findViewById(R.id.btn_category);
-        btn_category.setOnClickListener(onClickListener);
-
+        add_back = findViewById(R.id.add_back);
+        pin_name = findViewById(R.id.pin_name);
+        pin_content = findViewById(R.id.pin_content);
         category = findViewById(R.id.category);
+        textView = findViewById(R.id.textView);
+        textView.setText(address);
+        aSwitch = findViewById(R.id.switch1);
+
+        btn_category.setOnClickListener(onClickListener);
+        add_back.setOnClickListener(onClickListener);
+
+        aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                switchCheck = isChecked;
+            }
+        });
+
+
+
         category_recyclerview = findViewById(R.id.category_recyclerview);
         category_recyclerview.setLayoutManager(new LinearLayoutManager(AddActivity.this, LinearLayoutManager.VERTICAL,false));
 
         categoryAdapter = new CategoryAdapter(categoryArrayList, getApplicationContext(), category, category_recyclerview);
         category_recyclerview.setAdapter(categoryAdapter);
 
-        pin_name = findViewById(R.id.pin_name);
-        pin_content = findViewById(R.id.pin_content);
-
-        textView = findViewById(R.id.textView);
-        textView.setText(address);
-
-
-        add_back = findViewById(R.id.add_back);
-        add_back.setOnClickListener(onClickListener);
 
         dialog = new CustomProgressDialog(AddActivity.this);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -229,6 +239,7 @@ public class AddActivity extends AppCompatActivity {
         pin.put("color", categoryAdapter.getDbColor());
         pin.put("category", categoryAdapter.getDbName());
         pin.put("id", docRef.getId());
+        pin.put("setting", switchCheck);
 
 
         docRef.set(pin)
@@ -244,15 +255,17 @@ public class AddActivity extends AppCompatActivity {
             }
         });
 
-        db.collection("PinFeed").document(docRef.getId()).set(pin).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-            }
-        });
+        if(switchCheck){
+            db.collection("PinFeed").document(docRef.getId()).set(pin).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                }
+            });
+        }
 
     }
 
